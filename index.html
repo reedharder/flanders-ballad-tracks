@@ -221,7 +221,7 @@
   <section id="view-map" class="view">
     <h2 class="sec">Where the songs were collected</h2>
     <p class="sec-note">Performer hometowns, geocoded offline and plotted on real state boundaries. Click a circle to filter the Library, scroll to zoom, drag to pan. This Artifact can't load live map tiles (content-security-policy), so no street-level basemap here — the <a href="https://reedharder.github.io/flanders-ballad-tracks/" target="_blank" rel="noopener">GitHub Pages version</a> has a full interactive Leaflet/OpenStreetMap map instead.</p>
-    <div id="leafletMap" style="height:520px; border:1px solid var(--line); border-radius:10px;"></div>
+    <div id="leafletMap" style="width:100%; height:520px; border:1px solid var(--line); border-radius:10px;"></div>
     <div id="mapLegend" class="legend-row" style="margin-top:10px;"></div>
   </section>
 
@@ -938,6 +938,9 @@ document.querySelectorAll('nav.tabs button').forEach(btn => {
     btn.classList.add('active');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(`view-${btn.dataset.view}`).classList.add('active');
+    if (btn.dataset.view === 'map' && leafletMap) {
+      setTimeout(() => leafletMap.invalidateSize(), 0);
+    }
   });
 });
 </script>
