@@ -62,6 +62,13 @@
   .version-badge:hover{color:var(--accent); border-color:var(--accent);}
   .no-audio-note{font-size:12px; color:var(--ink-mute); font-style:italic; margin-top:8px;}
   .audio-fallback{font-size:12px; color:var(--crit); margin-top:6px;}
+  .human-controls{margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);}
+  .hc-row{display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:6px;}
+  .hc-row:last-child{margin-bottom:0;}
+  .hc-label{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-mute); margin-right:2px;}
+  .hc-row input[type=range]{width:110px; vertical-align:middle;}
+  .hc-checkbox{font-size:12px; color:var(--ink-mute); display:inline-flex; align-items:center; gap:4px; cursor:pointer;}
+  .hc-checkbox input{cursor:pointer;}
   .map-point{fill:var(--accent); fill-opacity:.55; stroke:var(--accent-strong,var(--accent)); stroke-width:1; cursor:pointer;}
   .map-point:hover{fill-opacity:.85;}
   .map-label{font-family:var(--font-mono); font-size:9px; fill:var(--ink-mute);}
@@ -69,6 +76,8 @@
   .stat-block h3{font-family:var(--font-display); font-size:16px; margin:0 0 10px;}
   .bar-row{display:grid; grid-template-columns:160px 1fr 50px; gap:8px; align-items:center; font-size:12.5px; margin-bottom:5px;}
   .bar-row .label{color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .bar-row .label.clickable{cursor:pointer; text-decoration:underline dotted; text-underline-offset:2px;}
+  .bar-row .label.clickable:hover{color:var(--accent);}
   .bar-row .bar{height:12px; background:var(--panel2); border-radius:3px; overflow:hidden;}
   .bar-row .bar i{display:block; height:100%; background:var(--accent);}
   .bar-row .count{font-family:var(--font-mono); color:var(--ink-mute); text-align:right;}
@@ -187,6 +196,7 @@
         <option value="instrumental">Instrumental</option>
       </select>
       <span class="status" id="resultCount"></span>
+      <button class="ghost" onclick="exportOverrides()" title="Download every genre/speed correction you've made in this browser, to send back for merging into the real dataset">Export my corrections (JSON)</button>
     </div>
 
     <div class="grid" id="list-confident"></div>
@@ -227,6 +237,34 @@
 let MANIFEST = null;
 const confirmedLabels = {}; // id -> label string
 
+/* ---------------- human overrides (genre, speed) ----------------
+   Stored in this browser's localStorage so corrections survive a reload.
+   "Export my corrections" downloads them as JSON to merge back into the
+   real dataset - this is a single-curator stopgap; a public/crowdsourced
+   version would need a real "flag an error" + review flow instead. */
+const OVERRIDES_KEY = 'flanders_human_overrides_v1';
+function loadOverrides(){
+  try { return JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveOverride(trackId, patch){
+  const all = loadOverrides();
+  all[trackId] = {...(all[trackId]||{}), ...patch, updated_at: new Date().toISOString()};
+  localStorage.setItem(OVERRIDES_KEY, JSON.stringify(all));
+  return all[trackId];
+}
+function getOverride(trackId){ return loadOverrides()[trackId] || null; }
+function exportOverrides(){
+  const all = loadOverrides();
+  const n = Object.keys(all).length;
+  if (!n) { alert('No corrections recorded yet in this browser.'); return; }
+  const blob = new Blob([JSON.stringify(all, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'flanders_human_corrections.json';
+  a.click();
+}
+
 fetch('manifest.json').then(r => r.json()).then(m => { MANIFEST = m; render(); });
 
 function fmtTime(s){
@@ -248,11 +286,14 @@ function render(){
 }
 
 const CONF_LABEL = {confirmed: '✓ confirmed (TTA/label match)', likely: 'likely', guess: 'guess', low: 'low confidence'};
-function genreBadge(g){
+function genreBadge(t){
+  const override = t && t.id ? getOverride(t.id)?.genre : null;
+  const g = override || (t && t.genre);
   if (!g) return '';
   const typeLabel = {song: 'Song', instrumental: 'Instrumental', spoken: 'Spoken', uncertain: 'Uncertain'}[g.type] || g.type;
   const label = g.label || `${typeLabel}${g.confidence ? ' · ' + (CONF_LABEL[g.confidence]||g.confidence) : ''}`;
-  const badge = `<span class="genre-badge ${g.type}" title="${(g.detail||'').replace(/"/g,'&quot;')}">${label}</span>`;
+  const humanTag = override ? ' <span style="opacity:.7;">(human)</span>' : '';
+  const badge = `<span class="genre-badge ${g.type}" title="${(g.detail||'').replace(/"/g,'&quot;')}">${label}${humanTag}</span>`;
   return g.tta_url ? `${badge}<a class="dl" href="${g.tta_url}" target="_blank" rel="noopener" style="margin-left:4px;">Tune Archive ↗</a>` : badge;
 }
 function procNote(p){
@@ -261,6 +302,58 @@ function procNote(p){
   const denoise = p.denoised ? '✓ denoised' : '✗ not denoised (hiss/hum still present)';
   return `<div class="proc-note"><b>Processing:</b> ${declick} · ${denoise}<br>${p.note}</div>`;
 }
+function humanControls(t){
+  const ov = getOverride(t.id) || {};
+  const effectiveGenre = ov.genre?.type || t.genre?.type || 'uncertain';
+  const genreTypes = ['song', 'instrumental', 'spoken', 'uncertain'];
+  const genreBtns = genreTypes.map(gt => {
+    const active = gt === effectiveGenre && ov.genre;
+    const label = {song:'Song', instrumental:'Instrumental', spoken:'Spoken', uncertain:'Uncertain'}[gt];
+    return `<button class="ghost toggle ${active?'active':''}" onclick="setGenreOverride('${t.id}', '${gt}')">${label}</button>`;
+  }).join('');
+  const genreSetTag = ov.genre ? `<span class="status" style="color:var(--good);">✓ you set this${ov.genre.updated_at ? ' · '+new Date(ov.genre.updated_at).toLocaleDateString() : ''}</span>` : '';
+
+  const speedPct = ov.speed?.rate ? Math.round(ov.speed.rate*100) : 100;
+  const speedFlagged = !!ov.speed?.flagged;
+
+  return `
+    <div class="human-controls">
+      <div class="hc-row">
+        <span class="hc-label">Instrument/voice:</span>${genreBtns}${genreSetTag}
+      </div>
+      <div class="hc-row">
+        <span class="hc-label">Playback speed:</span>
+        <input type="range" min="80" max="120" value="${speedPct}" class="speed-slider" oninput="setPlaybackRate('${t.id}', this.value)">
+        <span class="status" id="speedlabel-${t.id}">${speedPct}%</span>
+        <label class="hc-checkbox"><input type="checkbox" ${speedFlagged?'checked':''} onchange="setSpeedFlag('${t.id}', this.checked)"> flag possible recording-speed issue</label>
+      </div>
+    </div>`;
+}
+function setGenreOverride(trackId, type){
+  saveOverride(trackId, {genre: {type, source: 'human_listen', confidence: 'confirmed'}});
+  // targeted refresh only - a full re-render would reset any audio mid-playback
+  const t = MANIFEST.confident.find(c => c.id === trackId) || MANIFEST.pending_label.find(c => c.id === trackId);
+  const genreArea = document.getElementById(`genrearea-${trackId}`);
+  if (genreArea && t) {
+    const tag = genreArea.querySelector('.tag');
+    genreArea.innerHTML = (tag ? tag.outerHTML : '') + genreBadge(t) + (t.version_count ? versionBadge(t) : '');
+  }
+  const ctl = document.getElementById(`humanctl-${trackId}`);
+  if (ctl && t) ctl.innerHTML = humanControls(t);
+}
+function setPlaybackRate(trackId, pct){
+  const rate = pct/100;
+  const el = document.getElementById(`audio-${trackId}`);
+  if (el) { el.playbackRate = rate; el.preservesPitch = false; el.mozPreservesPitch = false; el.webkitPreservesPitch = false; }
+  document.getElementById(`speedlabel-${trackId}`).textContent = `${pct}%`;
+  const existing = getOverride(trackId)?.speed || {};
+  saveOverride(trackId, {speed: {...existing, rate}});
+}
+function setSpeedFlag(trackId, flagged){
+  const existing = getOverride(trackId)?.speed || {rate: 1};
+  saveOverride(trackId, {speed: {...existing, flagged}});
+}
+
 function warnBlock(t){
   const parts = [];
   if (t.parser_note) parts.push(`<b>Label note:</b> ${t.parser_note}`);
@@ -282,19 +375,6 @@ function jumpToSibling(el){
   if (target) { target.scrollIntoView({behavior:'smooth', block:'center'}); target.style.outline = '2px solid var(--accent)'; setTimeout(()=>target.style.outline='', 1500); }
 }
 
-// A handful of tracks are bundled locally in the artifact itself (fast, no
-// external dependency). Everything else streams from the public data repo -
-// github.com/reedharder/flanders-ballad-tracks - since the artifact can't
-// bundle all 173 tracks x 2 (original+denoised) within its size budget.
-const BUNDLED_SET = new Set([
-  "D61A01","cyl67-band1",
-  "hhfbc-cyl48-band1","hhfbc-cyl52-band2","hhfbc-cyl16-band6","hhfbc-cyl25-band1",
-  "hhfbc-cyl70-band1","hhfbc-cyl71-band2","hhfbc-cyl57-band3","hhfbc-cyl62-band2",
-  "hhfbc-c2-band1","hhfbc-cyl84_IRENE-band3","hhfbc-cyl120_IRENE-band4",
-  "hhfbc-cyl197_IRENE-band3","hhfbc-cyl201_IRENE-band1","hhfbc-cyl92_IRENE-band2",
-  "hhfbc-cyl102_IRENE-band1","hhfbc-cyl120_IRENE-band1","hhfbc-cyl81_IRENE-band1","hhfbc-cyl86_IRENE-band1",
-  "hhfbc-cyl63-band2","hhfbc-cyl47-band2","hhfbc-cyl47-band1","hhfbc-cyl63-band1","hhfbc-c5-band1",
-]);
 // Deployed on GitHub Pages directly from this data repo, so every file is
 // same-origin - no CSP/cross-origin concerns, no bundling budget. Everything
 // just plays from its real relative path.
@@ -305,12 +385,10 @@ function resolveAudioUrl(file, trackId){
 function confidentFiltered(){
   const q = (document.getElementById('searchBox')?.value || '').toLowerCase().trim();
   const genre = document.getElementById('genreFilter')?.value || '';
-  const audio = document.getElementById('audioFilter')?.value || '';
   const sort = document.getElementById('sortSelect')?.value || 'title';
   let list = MANIFEST.confident.filter(t => {
     if (q && !(`${t.title} ${t.performer} ${t.location}`.toLowerCase().includes(q))) return false;
     if (genre && t.genre?.type !== genre) return false;
-    if (audio === 'bundled' && !BUNDLED_SET.has(t.id)) return false;
     return true;
   });
   list.sort((a,b) => {
@@ -324,7 +402,7 @@ function confidentFiltered(){
 function renderAudioBlock(t){
   const src = resolveAudioUrl(t.file, t.id);
   if (!t.denoised_file) {
-    return `<audio controls preload="none" src="${src}"></audio>`;
+    return `<audio controls preload="none" src="${src}" id="audio-${t.id}"></audio>`;
   }
   return `
     <div class="row" style="margin:6px 0;">
@@ -332,18 +410,6 @@ function renderAudioBlock(t){
       <button class="ghost toggle" id="toggle-dn-${t.id}" onclick="switchAudio('${t.id}', true)">Denoised (${t.denoised_retained_pct}% energy kept)</button>
     </div>
     <audio controls preload="none" src="${src}" id="audio-${t.id}"></audio>`;
-}
-function handleAudioError(el, trackId){
-  externalAudioBlocked = true;
-  el.style.display = 'none';
-  const fb = document.getElementById(`fallback-${trackId}`);
-  const t = MANIFEST.confident.find(c => c.id === trackId) || MANIFEST.pending_label.find(c => c.id === trackId);
-  const ghPage = t ? `https://github.com/reedharder/flanders-ballad-tracks/blob/main/${t.file}` : 'https://github.com/reedharder/flanders-ballad-tracks';
-  if (fb) {
-    fb.style.display = 'block';
-    fb.innerHTML = `⚠ External audio didn't load here (likely this artifact's content-security-policy). ` +
-      `<a class="dl" href="${ghPage}" target="_blank" rel="noopener">Open on GitHub ↗</a>`;
-  }
 }
 function switchAudio(id, denoised){
   const t = MANIFEST.confident.find(c => c.id === id);
@@ -357,6 +423,15 @@ function switchAudio(id, denoised){
   if (wasPlaying) el.play();
 }
 
+function applySavedSpeedOverrides(list){
+  list.forEach(t => {
+    const rate = getOverride(t.id)?.speed?.rate;
+    if (!rate || rate === 1) return;
+    const el = document.getElementById(`audio-${t.id}`);
+    if (el) { el.playbackRate = rate; el.preservesPitch = false; el.mozPreservesPitch = false; el.webkitPreservesPitch = false; }
+  });
+}
+
 function renderConfident(){
   const el = document.getElementById('list-confident');
   const list = confidentFiltered();
@@ -367,7 +442,7 @@ function renderConfident(){
     <div class="card" id="card-${t.id}">
       <div class="top-row">
         <h3>${t.title}</h3>
-        <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="tag good">confident</span>${genreBadge(t.genre)}${versionBadge(t)}</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="genrearea-${t.id}"><span class="tag good">confident</span>${genreBadge(t)}${versionBadge(t)}</div>
       </div>
       <div class="meta">${t.performer} · ${t.location}${durText}</div>
       ${renderAudioBlock(t)}
@@ -379,8 +454,10 @@ function renderConfident(){
       <div class="meta" style="margin-top:8px;">${t.note}</div>
       ${procNote(t.processing)}
       ${warnBlock(t)}
+      <div id="humanctl-${t.id}">${humanControls(t)}</div>
     </div>`;
   }).join('');
+  applySavedSpeedOverrides(list);
 }
 
 function wireControls(){
@@ -396,7 +473,7 @@ function renderPending(){
     <div class="card" id="card-${t.id}">
       <div class="top-row">
         <h3>${t.id}</h3>
-        <div style="display:flex; gap:6px;"><span class="tag accent">pending label</span>${genreBadge(t.genre)}</div>
+        <div style="display:flex; gap:6px;"><span class="tag accent">pending label</span>${genreBadge(t)}</div>
       </div>
       <div class="meta">${t.duration_s.toFixed(0)}s · ${t.note}</div>
       <audio controls preload="none" src="${t.file}"></audio>
@@ -700,16 +777,9 @@ function exportQa(){
 }
 
 /* ---------------- MAP ---------------- */
-// Deliberately coarse (<10 vertices/state) schematic outlines, not surveyed borders -
-// enough to orient the eye, not a GIS map. See design note in the Map tab.
-const STATE_OUTLINES = {
-  VT: [[45.01,-73.35],[45.01,-71.5],[42.73,-72.4],[42.75,-73.25],[45.01,-73.35]],
-  NH: [[45.3,-71.5],[45.0,-70.7],[43.1,-70.75],[42.7,-72.4],[45.0,-71.5]],
-  ME: [[47.3,-69.0],[45.3,-67.0],[43.65,-70.2],[44.3,-71.1],[45.3,-71.1],[47.3,-69.0]],
-  MA: [[42.75,-73.3],[42.7,-70.85],[41.5,-70.0],[41.3,-71.8],[42.0,-73.5],[42.75,-73.3]],
-  RI: [[42.0,-71.8],[42.0,-71.1],[41.15,-71.2],[41.3,-71.9],[42.0,-71.8]],
-  CT: [[42.05,-73.5],[42.05,-71.8],[41.0,-71.8],[41.0,-73.7],[42.05,-73.5]],
-};
+// Real (lightly simplified) state boundaries - PublicaMundi MappingAPI us-states.json,
+// a standard public-domain/CC0-style GeoJSON dataset commonly used for US choropleth maps.
+const STATE_OUTLINES = {"CT":[[42.039,-73.054],[42.023,-71.799],[42.006,-71.799],[41.415,-71.799],[41.322,-71.86],[41.338,-71.947],[41.261,-72.385],[41.283,-72.906],[41.146,-73.13],[41.102,-73.371],[40.987,-73.656],[41.102,-73.727],[41.212,-73.481],[41.294,-73.552],[42.05,-73.486],[42.039,-73.054]],"ME":[[43.058,-70.704],[43.129,-70.824],[43.228,-70.808],[43.343,-70.967],[44.657,-71.033],[45.303,-71.082],[45.44,-70.649],[45.511,-70.72],[45.665,-70.556],[45.736,-70.386],[45.796,-70.419],[45.889,-70.26],[46.065,-70.31],[46.327,-70.211],[46.415,-70.058],[46.694,-69.997],[47.461,-69.225],[47.428,-69.044],[47.242,-69.033],[47.176,-68.902],[47.286,-68.579],[47.286,-68.376],[47.357,-68.234],[47.198,-67.954],[47.067,-67.79],[45.944,-67.779],[45.676,-67.801],[45.605,-67.456],[45.49,-67.505],[45.38,-67.418],[45.281,-67.489],[45.128,-67.347],[45.161,-67.16],[44.805,-66.98],[44.646,-67.188],[44.706,-67.308],[44.597,-67.407],[44.624,-67.549],[44.531,-67.566],[44.542,-67.752],[44.328,-68.048],[44.476,-68.119],[44.487,-68.223],[44.328,-68.174],[44.252,-68.404],[44.378,-68.458],[44.312,-68.568],[44.312,-68.825],[44.46,-68.831],[44.427,-68.984],[44.323,-68.957],[44.104,-69.099],[44.044,-69.072],[43.923,-69.258],[43.967,-69.444],[43.841,-69.554],[43.825,-69.707],[43.72,-69.833],[43.742,-69.986],[43.852,-70.03],[43.677,-70.255],[43.567,-70.195],[43.529,-70.359],[43.436,-70.37],[43.321,-70.556],[43.058,-70.704]],"MA":[[42.888,-70.918],[42.872,-70.819],[42.696,-70.781],[42.554,-70.824],[42.422,-70.983],[42.269,-70.989],[42.247,-70.77],[42.088,-70.638],[41.962,-70.66],[41.93,-70.551],[41.814,-70.54],[41.716,-70.26],[41.809,-69.937],[41.672,-70.008],[41.552,-70.485],[41.546,-70.66],[41.639,-70.764],[41.612,-70.928],[41.541,-70.934],[41.497,-71.12],[41.678,-71.197],[41.71,-71.224],[41.782,-71.328],[42.017,-71.383],[42.017,-71.531],[42.006,-71.799],[42.023,-71.799],[42.039,-73.054],[42.05,-73.486],[42.088,-73.508],[42.746,-73.267],[42.729,-72.457],[42.696,-71.295],[42.789,-71.186],[42.888,-70.918]],"NH":[[45.303,-71.082],[44.657,-71.033],[43.343,-70.967],[43.228,-70.808],[43.129,-70.824],[43.058,-70.704],[42.872,-70.819],[42.888,-70.918],[42.789,-71.186],[42.696,-71.295],[42.729,-72.457],[42.806,-72.544],[42.954,-72.533],[43.008,-72.446],[43.151,-72.457],[43.573,-72.38],[43.77,-72.205],[43.994,-72.117],[44.076,-72.029],[44.323,-72.035],[44.416,-71.701],[44.586,-71.536],[44.75,-71.63],[44.914,-71.493],[45.013,-71.504],[45.27,-71.361],[45.243,-71.131],[45.303,-71.082]],"NY":[[45.013,-73.344],[44.805,-73.333],[44.619,-73.388],[44.438,-73.295],[44.246,-73.322],[44.044,-73.437],[43.77,-73.349],[43.688,-73.404],[43.523,-73.245],[42.833,-73.278],[42.746,-73.267],[42.088,-73.508],[42.05,-73.486],[41.294,-73.552],[41.212,-73.481],[41.102,-73.727],[40.987,-73.656],[40.905,-73.229],[40.966,-73.141],[40.966,-72.774],[40.998,-72.588],[41.157,-72.281],[41.042,-72.259],[40.993,-72.101],[40.845,-72.467],[40.626,-73.24],[40.582,-73.563],[40.593,-73.776],[40.544,-73.935],[40.708,-74.023],[40.998,-73.902],[41.141,-74.237],[41.36,-74.697],[41.431,-74.74],[41.437,-74.894],[41.606,-75.075],[41.754,-75.053],[41.869,-75.173],[41.864,-75.25],[42.001,-75.359],[42.001,-79.763],[42.253,-79.763],[42.269,-79.763],[42.554,-79.149],[42.691,-79.051],[42.784,-78.854],[42.954,-78.93],[42.987,-79.012],[43.26,-79.073],[43.375,-78.487],[43.37,-77.966],[43.343,-77.758],[43.233,-77.534],[43.277,-77.391],[43.271,-76.959],[43.343,-76.696],[43.523,-76.416],[43.529,-76.236],[43.803,-76.23],[43.961,-76.137],[44.071,-76.362],[44.197,-76.312],[44.367,-75.912],[44.515,-75.765],[44.849,-75.283],[45.019,-74.828],[44.991,-74.149],[45.013,-73.344]],"RI":[[42.017,-71.531],[42.017,-71.383],[41.782,-71.328],[41.71,-71.224],[41.727,-71.345],[41.579,-71.449],[41.371,-71.482],[41.322,-71.86],[41.415,-71.799],[42.006,-71.799],[42.017,-71.531]],"VT":[[45.013,-71.504],[44.914,-71.493],[44.75,-71.63],[44.586,-71.536],[44.416,-71.701],[44.323,-72.035],[44.076,-72.029],[43.994,-72.117],[43.77,-72.205],[43.573,-72.38],[43.151,-72.457],[43.008,-72.446],[42.954,-72.533],[42.806,-72.544],[42.729,-72.457],[42.746,-73.267],[42.833,-73.278],[43.523,-73.245],[43.688,-73.404],[43.77,-73.349],[44.044,-73.437],[44.246,-73.322],[44.438,-73.295],[44.619,-73.388],[44.805,-73.333],[45.013,-73.344],[45.002,-72.309],[45.013,-71.504]]};
 function project(lat, lon, bounds){
   const {latMin, latMax, lonMin, lonMax, w, h, pad} = bounds;
   const x = pad + (lon - lonMin) / (lonMax - lonMin) * (w - 2*pad);
@@ -774,11 +844,18 @@ function barList(title, note, entries, max) {
   return `<div class="stat-block"><h3>${title}</h3><p class="sec-note" style="margin-bottom:10px;">${note}</p>
     ${top.map(([label, count]) => `
       <div class="bar-row">
-        <div class="label" title="${label}">${label}</div>
+        <div class="label clickable" title="Filter the Library by &quot;${label}&quot;" onclick="jumpToLibrarySearch('${label.replace(/'/g,"\\'")}')">${label}</div>
         <div class="bar"><i style="width:${100*count/maxCount}%"></i></div>
         <div class="count">${count}×</div>
       </div>`).join('')}
   </div>`;
+}
+function jumpToLibrarySearch(text){
+  document.querySelector('nav.tabs button[data-view="library"]').click();
+  const box = document.getElementById('searchBox');
+  box.value = text;
+  renderConfident();
+  box.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function renderStats(){
@@ -797,6 +874,8 @@ function renderStats(){
       <div class="stat"><span class="n">${s.total_distinct_titles.toLocaleString()}</span><span class="l">distinct song/tune titles (after normalizing spelling/articles)</span></div>
       <div class="stat"><span class="n">${s.titles_with_repeats}</span><span class="l">titles collected more than once — real repeat performances</span></div>
     </div>
+    ${statsScope==='available_now' ? barList('Song vs. instrumental', 'Only exists for the tracks actually split — no reliable instrument signal is available archive-wide (see confidence breakdown below).', Object.entries(s.genre_breakdown||{}), null) : ''}
+    ${statsScope==='available_now' ? barList('...and how sure we are', '"confirmed" = matched a specific Traditional Tune Archive page or an explicit label note. "guess"/"low"/"likely" = title-keyword heuristic only, not verified — most of this batch, honestly.', Object.entries(s.genre_confidence_breakdown||{}), null) : ''}
     ${barList('Most-collected titles', statsScope==='full_archive' ? 'Across the entire 426-item census, including titles not yet cut into individual tracks.' : 'Among the tracks already split and in the library.', s.top_titles, 15)}
     ${barList('Most-recorded performers', statsScope==='full_archive' ? 'Who Flanders and her collectors returned to most often, archive-wide.' : 'Among the tracks already split and in the library.', s.top_performers, 15)}
     ${barList('Most-represented towns', 'Raw location-string counts (dates not yet stripped from every entry, so some towns are split across a few near-duplicate strings).', s.top_locations, 15)}

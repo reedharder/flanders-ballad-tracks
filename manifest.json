@@ -1810,8 +1810,8 @@
     {
       "id": "hhfbc-cyl16-band1",
       "file": "confident_batch/hhfbc-cyl16-band1__Lord-James__Ellen-M.mp3",
-      "title": "Lord James\";",
-      "raw_title": "Lord James\";",
+      "title": "Lord James",
+      "raw_title": "Lord James",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -1842,8 +1842,8 @@
     {
       "id": "hhfbc-cyl16-band2",
       "file": "confident_batch/hhfbc-cyl16-band2__Barbara-Allen__Ellen-M.mp3",
-      "title": "Barbara Allen\";",
-      "raw_title": "Barbara Allen\";",
+      "title": "Barbara Allen",
+      "raw_title": "Barbara Allen",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -1874,8 +1874,8 @@
     {
       "id": "hhfbc-cyl16-band3",
       "file": "confident_batch/hhfbc-cyl16-band3__Capt-Wedderburn-s-courtship__Ellen-M.mp3",
-      "title": "Capt Wedderburn's Courtship\";",
-      "raw_title": "Capt Wedderburn's courtship\";",
+      "title": "Capt Wedderburn's Courtship",
+      "raw_title": "Capt Wedderburn's courtship",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -1906,8 +1906,8 @@
     {
       "id": "hhfbc-cyl16-band4",
       "file": "confident_batch/hhfbc-cyl16-band4__Broomfield-Hill__Ellen-M.mp3",
-      "title": "Broomfield Hill\";",
-      "raw_title": "Broomfield Hill\";",
+      "title": "Broomfield Hill",
+      "raw_title": "Broomfield Hill",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -1938,8 +1938,8 @@
     {
       "id": "hhfbc-cyl16-band5",
       "file": "confident_batch/hhfbc-cyl16-band5__Mary-and-her-serving-man__Ellen-M.mp3",
-      "title": "Mary and Her Serving Man\";",
-      "raw_title": "Mary and her serving man\";",
+      "title": "Mary and Her Serving Man",
+      "raw_title": "Mary and her serving man",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -1970,8 +1970,8 @@
     {
       "id": "hhfbc-cyl16-band6",
       "file": "confident_batch/hhfbc-cyl16-band6__Children-in-the-wood__Ellen-M.mp3",
-      "title": "Children in the Wood\";",
-      "raw_title": "Children in the wood\";",
+      "title": "Children in the Wood",
+      "raw_title": "Children in the wood",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -2004,8 +2004,8 @@
     {
       "id": "hhfbc-cyl16-band7",
       "file": "confident_batch/hhfbc-cyl16-band7__Daily-growing__Ellen-M.mp3",
-      "title": "Daily Growing\";",
-      "raw_title": "Daily growing\";",
+      "title": "Daily Growing",
+      "raw_title": "Daily growing",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl16",
@@ -2047,11 +2047,11 @@
       "parser_note": "Labeled '(Fiddle Tune)' on the cylinder. Cylinder label also lists a second title, 'Fair Charlotte' (Barton), not separately split into its own band file.",
       "duration_flag": null,
       "genre": {
-        "type": "instrumental",
+        "type": "song",
         "confidence": "confirmed",
         "tta_url": null,
-        "detail": "Labeled '(Fiddle Tune)' directly on the cylinder - no TTA search needed.",
-        "source": "manual_review"
+        "source": "human_listen",
+        "detail": "Cylinder label says '(Fiddle Tune)' but a human listen confirms this is a sung song, not instrumental. Label-based heuristic was wrong."
       },
       "processing": {
         "declicked": true,
@@ -2164,8 +2164,8 @@
     {
       "id": "hhfbc-cyl17-band1",
       "file": "confident_batch/hhfbc-cyl17-band1__Katherine-Jaffey__Ellen-M.mp3",
-      "title": "Katherine Jaffey\";",
-      "raw_title": "Katherine Jaffey\";",
+      "title": "Katherine Jaffey",
+      "raw_title": "Katherine Jaffey",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl17",
@@ -2196,8 +2196,8 @@
     {
       "id": "hhfbc-cyl17-band2",
       "file": "confident_batch/hhfbc-cyl17-band2__Banks-of-Claudy__Ellen-M.mp3",
-      "title": "Banks of Claudy\";",
-      "raw_title": "Banks of Claudy\";",
+      "title": "Banks of Claudy",
+      "raw_title": "Banks of Claudy",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl17",
@@ -2228,8 +2228,8 @@
     {
       "id": "hhfbc-cyl17-band3",
       "file": "confident_batch/hhfbc-cyl17-band3__The-mermaid__Ellen-M.mp3",
-      "title": "The Mermaid\";",
-      "raw_title": "The mermaid\";",
+      "title": "The Mermaid",
+      "raw_title": "The mermaid",
       "performer": "Ellen M. Sullivan",
       "location": "",
       "source_item": "hhfbc-cyl17",
@@ -8832,7 +8832,19 @@
       ],
       "total_titles_recovered": 173,
       "total_distinct_titles": 158,
-      "titles_with_repeats": 13
+      "titles_with_repeats": 13,
+      "genre_breakdown": {
+        "song": 162,
+        "instrumental": 8,
+        "uncertain": 3
+      },
+      "genre_confidence_breakdown": {
+        "guess": 157,
+        "confirmed": 8,
+        "low": 3,
+        "likely": 3,
+        "unknown": 2
+      }
     }
   }
 }
