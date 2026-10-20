@@ -282,7 +282,8 @@ function render(){
   renderConfident();
   renderPending();
   renderQaList();
-  renderMap();
+  // renderMap() is deliberately NOT called here - see the lazy call in the
+  // tab click handler below.
   renderStats();
   wireControls();
 }
@@ -938,8 +939,11 @@ document.querySelectorAll('nav.tabs button').forEach(btn => {
     btn.classList.add('active');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(`view-${btn.dataset.view}`).classList.add('active');
-    if (btn.dataset.view === 'map' && leafletMap) {
-      setTimeout(() => leafletMap.invalidateSize(), 0);
+    if (btn.dataset.view === 'map') {
+      requestAnimationFrame(() => {
+        renderMap();
+        if (leafletMap) leafletMap.invalidateSize();
+      });
     }
   });
 });
