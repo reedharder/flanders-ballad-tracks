@@ -2063,7 +2063,8 @@
       "denoised_retained_pct": 63.7,
       "version_count": 1,
       "version_group": "irish tune",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl164_IRENE-band1",
@@ -2127,7 +2128,8 @@
       "denoised_retained_pct": 65.1,
       "version_count": 1,
       "version_group": "turkey in the straw",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl165_IRENE-band2",
@@ -2159,7 +2161,8 @@
       "denoised_retained_pct": 62.9,
       "version_count": 1,
       "version_group": "arkansas traveler",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl17-band1",
@@ -2356,7 +2359,8 @@
       "version_group": "biddy will meet me",
       "version_siblings": [
         "hhfbc-cyl120_IRENE-band4"
-      ]
+      ],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl195_IRENE-band1",
@@ -2388,7 +2392,8 @@
       "denoised_retained_pct": 63.8,
       "version_count": 1,
       "version_group": "twelve days of christmas",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl197_IRENE-band1",
@@ -2420,7 +2425,8 @@
       "denoised_retained_pct": 61.4,
       "version_count": 1,
       "version_group": "millerite hymn",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl197_IRENE-band2",
@@ -2452,7 +2458,8 @@
       "denoised_retained_pct": 61.4,
       "version_count": 1,
       "version_group": "i wish i was an apple",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl197_IRENE-band3",
@@ -2486,7 +2493,8 @@
       "version_group": "derby ram",
       "version_siblings": [
         "hhfbc-cyl201_IRENE-band1"
-      ]
+      ],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl201_IRENE-band1",
@@ -2552,7 +2560,8 @@
       "denoised_retained_pct": 64.3,
       "version_count": 1,
       "version_group": "lily of the west",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl205_IRENE-band1",
@@ -2584,7 +2593,8 @@
       "denoised_retained_pct": 65.6,
       "version_count": 1,
       "version_group": "high barbary",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl206_IRENE-band1",
@@ -2682,7 +2692,8 @@
       "denoised_retained_pct": 68.6,
       "version_count": 1,
       "version_group": "old oak tree the",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl210_IRENE-band1",
@@ -3068,7 +3079,8 @@
       "denoised_retained_pct": 67.4,
       "version_count": 1,
       "version_group": "in london live a merchant",
-      "version_siblings": []
+      "version_siblings": [],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl239_IRENE-band1",
@@ -3135,7 +3147,8 @@
       "version_siblings": [
         "hhfbc-cyl114_IRENE-band1",
         "hhfbc-cyl248_IRENE-band1"
-      ]
+      ],
+      "has_medley_qa": true
     },
     {
       "id": "hhfbc-cyl242_IRENE-band1",
@@ -5949,7 +5962,7 @@
     },
     {
       "id": "D61A_sideA",
-      "file": "needs_qa/D61A_sideA_preview40k.mp3",
+      "file": "needs_qa/D61A_sideA_preview24k.mp3",
       "note": "40kbps mono QA preview only - archival-quality source stays on archive.org (linked) until boundaries are confirmed.",
       "source_item": "hhfbc_tapes_D61A",
       "source_url": "https://archive.org/details/hhfbc_tapes_D61A",
@@ -7780,7 +7793,7 @@
     },
     {
       "id": "D61A_sideB",
-      "file": "needs_qa/D61A_sideB_preview40k.mp3",
+      "file": "needs_qa/D61A_sideB_preview24k.mp3",
       "note": "40kbps mono QA preview only - archival-quality source stays on archive.org (linked) until boundaries are confirmed.",
       "source_item": "hhfbc_tapes_D61A",
       "source_url": "https://archive.org/details/hhfbc_tapes_D61A",
@@ -8403,6 +8416,1462 @@
           "asr_evidence": "The first three notes of the tattoo were always accompanied by a roll on the drum. / This includes side A of reel number 61 of LWL 12,301. / Thelon Harnes-Flanders Duplication Project will continue on side B of this reel"
         }
       ]
+    },
+    {
+      "id": "hhfbc-cyl160_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl160_IRENE-band1__Irish-Tune-Fiddle-Tune__Barton-Fair-Charlotte-by-Barton.mp3",
+      "duration_s": 368.74,
+      "candidate_sequence": [
+        {
+          "title": "Irish Tune (labeled 'Fiddle Tune' on the cylinder)",
+          "performer": "Barton",
+          "resolved_as": null
+        },
+        {
+          "title": "Fair Charlotte",
+          "performer": "Barton",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Irish Tune (labeled 'Fiddle Tune' on the cylinder)",
+          "performer": "Barton"
+        },
+        {
+          "title": "Fair Charlotte",
+          "performer": "Barton"
+        }
+      ],
+      "source_item": "hhfbc-cyl160_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl160_IRENE",
+      "signals": {
+        "energy_gaps_s": [],
+        "asr_transcript": [],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [],
+        "confidence": "none",
+        "rationale": "No energy gap found anywhere in this 369s clip despite 2 titles on the label - this is most likely a continuous as-played medley with no pause between tunes, not a splitting failure. Listen as a medley by default; only attempt manual dividers if you can hear a tune change by ear."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl160_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl160_IRENE-band1__Irish-Tune-Fiddle-Tune__Barton-Fair-Charlotte-by-Barton.mp3"
+    },
+    {
+      "id": "hhfbc-cyl165_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl165_IRENE-band1__Turkey-in-the-Straw__Barton-Arkansas-Traveler-by-Barton-Wak.mp3",
+      "duration_s": 395.25,
+      "candidate_sequence": [
+        {
+          "title": "Turkey in the Straw",
+          "performer": "Barton",
+          "resolved_as": null
+        },
+        {
+          "title": "Arkansas Traveler",
+          "performer": "Barton",
+          "resolved_as": null
+        },
+        {
+          "title": "Wake Up, Susan",
+          "performer": "Barton",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Turkey in the Straw",
+          "performer": "Barton"
+        },
+        {
+          "title": "Arkansas Traveler",
+          "performer": "Barton"
+        },
+        {
+          "title": "Wake Up, Susan",
+          "performer": "Barton"
+        },
+        {
+          "title": "(untitled - uncataloged by the original collector)",
+          "performer": "Barton"
+        },
+        {
+          "title": "Pop Goes the Weasel",
+          "performer": "Barton"
+        }
+      ],
+      "source_item": "hhfbc-cyl165_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl165_IRENE",
+      "signals": {
+        "energy_gaps_s": [],
+        "asr_transcript": [
+          {
+            "start": 42.26,
+            "end": 44.26,
+            "text": " That's fine. That's a new one."
+          },
+          {
+            "start": 44.26,
+            "end": 247.44,
+            "text": " Do you have another one right now?"
+          },
+          {
+            "start": 247.44,
+            "end": 253.02,
+            "text": " Well, we've got a song to start."
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [],
+        "confidence": "none",
+        "rationale": "No energy gap found anywhere in this 395s clip despite 3 titles on the label - this is most likely a continuous as-played medley with no pause between tunes, not a splitting failure. Listen as a medley by default; only attempt manual dividers if you can hear a tune change by ear."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 5 titles across only 2 band file(s) - this file covers 3 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl165_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl165_IRENE-band1__Turkey-in-the-Straw__Barton-Arkansas-Traveler-by-Barton-Wak.mp3"
+    },
+    {
+      "id": "hhfbc-cyl165_IRENE-band2",
+      "file": "confident_batch/hhfbc-cyl165_IRENE-band2__un-named__Barton-Pop-Goes-the-Weasel-by-Barton.mp3",
+      "duration_s": 89.87,
+      "candidate_sequence": [
+        {
+          "title": "(untitled - uncataloged by the original collector)",
+          "performer": "Barton",
+          "resolved_as": null
+        },
+        {
+          "title": "Pop Goes the Weasel",
+          "performer": "Barton",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Turkey in the Straw",
+          "performer": "Barton"
+        },
+        {
+          "title": "Arkansas Traveler",
+          "performer": "Barton"
+        },
+        {
+          "title": "Wake Up, Susan",
+          "performer": "Barton"
+        },
+        {
+          "title": "(untitled - uncataloged by the original collector)",
+          "performer": "Barton"
+        },
+        {
+          "title": "Pop Goes the Weasel",
+          "performer": "Barton"
+        }
+      ],
+      "source_item": "hhfbc-cyl165_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl165_IRENE",
+      "signals": {
+        "energy_gaps_s": [],
+        "asr_transcript": [
+          {
+            "start": 84.88,
+            "end": 88.08,
+            "text": " Alright, the technician, would you please proceed to the program, huh?"
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [],
+        "confidence": "none",
+        "rationale": "No energy gap found anywhere in this 90s clip despite 2 titles on the label - this is most likely a continuous as-played medley with no pause between tunes, not a splitting failure. Listen as a medley by default; only attempt manual dividers if you can hear a tune change by ear."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 5 titles across only 2 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl165_IRENE-band2_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl165_IRENE-band2__un-named__Barton-Pop-Goes-the-Weasel-by-Barton.mp3"
+    },
+    {
+      "id": "hhfbc-cyl178_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl178_IRENE-band1__Biddy-Will-Meet-Me__Davis-Scolding-Wife-by-Davis.mp3",
+      "duration_s": 293.54,
+      "candidate_sequence": [
+        {
+          "title": "Biddy Will Meet Me",
+          "performer": "Davis",
+          "resolved_as": null
+        },
+        {
+          "title": "Scolding Wife",
+          "performer": "Davis",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Biddy Will Meet Me",
+          "performer": "Davis"
+        },
+        {
+          "title": "Scolding Wife",
+          "performer": "Davis"
+        }
+      ],
+      "source_item": "hhfbc-cyl178_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl178_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          40.26,
+          81.19,
+          167.24,
+          121.85,
+          73.8,
+          8.21,
+          50.09,
+          173.86
+        ],
+        "asr_transcript": [
+          {
+            "start": 189.34,
+            "end": 191.76,
+            "text": " And then I would be quite him on the way."
+          },
+          {
+            "start": 191.76,
+            "end": 195.95,
+            "text": " Oh, and white curled up on the road, I go white curled up on the road."
+          },
+          {
+            "start": 195.95,
+            "end": 197.95,
+            "text": " When I be back out on the road, I'll tell you,"
+          },
+          {
+            "start": 197.95,
+            "end": 200.46,
+            "text": " little, be quite him on the way."
+          },
+          {
+            "start": 200.46,
+            "end": 202.46,
+            "text": " Oh, with that lid out and jettles on the birds,"
+          },
+          {
+            "start": 202.46,
+            "end": 205.23,
+            "text": " thinking of the way the queen's up to you,"
+          },
+          {
+            "start": 205.23,
+            "end": 207.23,
+            "text": " doing without the bird coming out the air."
+          },
+          {
+            "start": 207.23,
+            "end": 210.74,
+            "text": " Freddie's arms upon the grass,"
+          },
+          {
+            "start": 210.74,
+            "end": 212.74,
+            "text": " is leaving for so much of day,"
+          },
+          {
+            "start": 212.74,
+            "end": 214.74,
+            "text": " but instead of being a grippy-art,"
+          },
+          {
+            "start": 214.74,
+            "end": 216.74,
+            "text": " roaring, I have the bird anyway."
+          },
+          {
+            "start": 216.74,
+            "end": 218.8,
+            "text": " Oh, and white curled up on the road,"
+          },
+          {
+            "start": 218.8,
+            "end": 221.89,
+            "text": " I go white curled up on the road."
+          },
+          {
+            "start": 255.25,
+            "end": 258.25,
+            "text": " I've worked up the leg of the settlement that he gave to me before."
+          },
+          {
+            "start": 258.25,
+            "end": 263.38,
+            "text": " Why is it that he's worse than his mom and he's the one who spends the need to pray?"
+          },
+          {
+            "start": 263.38,
+            "end": 267.38,
+            "text": " Open the door, my baby darling, for I'm just I'm earned on the way."
+          },
+          {
+            "start": 267.38,
+            "end": 276.08,
+            "text": " Open the door, my baby darling, for I'm just I'm earned on the way."
+          },
+          {
+            "start": 276.08,
+            "end": 279.91,
+            "text": " Oh, he's calling, sorry, my sister's out."
+          },
+          {
+            "start": 279.91,
+            "end": 284.51,
+            "text": " She's telling me that I'm just one of the girls he's ever been around."
+          },
+          {
+            "start": 285.51,
+            "end": 287.51,
+            "text": " Uh-huh, today's the day."
+          },
+          {
+            "start": 287.51,
+            "end": 288.51,
+            "text": " I know right now."
+          },
+          {
+            "start": 288.51,
+            "end": 290.54,
+            "text": " Today's the day we're going to do better than today."
+          },
+          {
+            "start": 290.54,
+            "end": 292.54,
+            "text": " We're going to practice, you know."
+          },
+          {
+            "start": 292.54,
+            "end": 294.54,
+            "text": " We're going to do better than today."
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          40.26
+        ],
+        "confidence": "low",
+        "rationale": "8 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl178_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl178_IRENE-band1__Biddy-Will-Meet-Me__Davis-Scolding-Wife-by-Davis.mp3"
+    },
+    {
+      "id": "hhfbc-cyl195_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl195_IRENE-band1__Twelve-Days-of-Christmas__Bicknell-Polly-Hopkins-by-Bicknell-Bra.mp3",
+      "duration_s": 231.0,
+      "candidate_sequence": [
+        {
+          "title": "Twelve Days of Christmas",
+          "performer": "Bicknell",
+          "resolved_as": null
+        },
+        {
+          "title": "Polly Hopkins",
+          "performer": "Bicknell",
+          "resolved_as": null
+        },
+        {
+          "title": "Brave Wolfe",
+          "performer": "Bicknell",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Twelve Days of Christmas",
+          "performer": "Bicknell"
+        },
+        {
+          "title": "Polly Hopkins",
+          "performer": "Bicknell"
+        },
+        {
+          "title": "Brave Wolfe",
+          "performer": "Bicknell"
+        }
+      ],
+      "source_item": "hhfbc-cyl195_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl195_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          199.01,
+          81.53,
+          7.16,
+          96.4,
+          160.71,
+          74.52,
+          68.42,
+          103.08
+        ],
+        "asr_transcript": [
+          {
+            "start": 1.97,
+            "end": 3.97,
+            "text": " Uh, I'll have to thank you."
+          },
+          {
+            "start": 3.97,
+            "end": 149.48,
+            "text": " Thank you."
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          199.01,
+          81.53
+        ],
+        "confidence": "low",
+        "rationale": "8 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 3 titles across only 1 band file(s) - this file covers 3 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl195_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl195_IRENE-band1__Twelve-Days-of-Christmas__Bicknell-Polly-Hopkins-by-Bicknell-Bra.mp3"
+    },
+    {
+      "id": "hhfbc-cyl197_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl197_IRENE-band1__Millerite-Hymn__Shipman-Up-in-the-Balloon-Boys-by-Shipm.mp3",
+      "duration_s": 56.24,
+      "candidate_sequence": [
+        {
+          "title": "Millerite Hymn",
+          "performer": "Shipman",
+          "resolved_as": null
+        },
+        {
+          "title": "Up in the Balloon Boys",
+          "performer": "Shipman",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Millerite Hymn",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Up in the Balloon Boys",
+          "performer": "Shipman"
+        },
+        {
+          "title": "I Wish I was an Apple",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Old Zip Coon (words)",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Derby Ram",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Old Woman",
+          "performer": "Shipman"
+        }
+      ],
+      "source_item": "hhfbc-cyl197_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl197_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          50.76,
+          15.37,
+          6.63,
+          33.81,
+          45.73,
+          39.85,
+          29.56,
+          9.17
+        ],
+        "asr_transcript": [
+          {
+            "start": 3.18,
+            "end": 5.18,
+            "text": " I'm just going to be fast and slow."
+          },
+          {
+            "start": 5.18,
+            "end": 48.52,
+            "text": " Come on."
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          50.76
+        ],
+        "confidence": "low",
+        "rationale": "8 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 6 titles across only 3 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl197_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl197_IRENE-band1__Millerite-Hymn__Shipman-Up-in-the-Balloon-Boys-by-Shipm.mp3"
+    },
+    {
+      "id": "hhfbc-cyl197_IRENE-band2",
+      "file": "confident_batch/hhfbc-cyl197_IRENE-band2__I-Wish-I-was-an-Apple__Shipman-Old-Zip-Coon.mp3",
+      "duration_s": 46.87,
+      "candidate_sequence": [
+        {
+          "title": "I Wish I was an Apple",
+          "performer": "Shipman",
+          "resolved_as": null
+        },
+        {
+          "title": "Old Zip Coon (words)",
+          "performer": "Shipman",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Millerite Hymn",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Up in the Balloon Boys",
+          "performer": "Shipman"
+        },
+        {
+          "title": "I Wish I was an Apple",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Old Zip Coon (words)",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Derby Ram",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Old Woman",
+          "performer": "Shipman"
+        }
+      ],
+      "source_item": "hhfbc-cyl197_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl197_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          20.13,
+          29.76
+        ],
+        "asr_transcript": [
+          {
+            "start": 4.46,
+            "end": 6.46,
+            "text": " It's not bad."
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          20.13
+        ],
+        "confidence": "low",
+        "rationale": "2 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 6 titles across only 3 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl197_IRENE-band2_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl197_IRENE-band2__I-Wish-I-was-an-Apple__Shipman-Old-Zip-Coon.mp3"
+    },
+    {
+      "id": "hhfbc-cyl197_IRENE-band3",
+      "file": "confident_batch/hhfbc-cyl197_IRENE-band3__Derby-Ram__Shipman-Old-Woman-by-Shipman.mp3",
+      "duration_s": 216.2,
+      "candidate_sequence": [
+        {
+          "title": "Derby Ram",
+          "performer": "Shipman",
+          "resolved_as": null
+        },
+        {
+          "title": "Old Woman",
+          "performer": "Shipman",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Millerite Hymn",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Up in the Balloon Boys",
+          "performer": "Shipman"
+        },
+        {
+          "title": "I Wish I was an Apple",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Old Zip Coon (words)",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Derby Ram",
+          "performer": "Shipman"
+        },
+        {
+          "title": "Old Woman",
+          "performer": "Shipman"
+        }
+      ],
+      "source_item": "hhfbc-cyl197_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl197_IRENE",
+      "signals": {
+        "energy_gaps_s": [],
+        "asr_transcript": [],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [],
+        "confidence": "none",
+        "rationale": "No energy gap found anywhere in this 216s clip despite 2 titles on the label - this is most likely a continuous as-played medley with no pause between tunes, not a splitting failure. Listen as a medley by default; only attempt manual dividers if you can hear a tune change by ear."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 6 titles across only 3 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl197_IRENE-band3_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl197_IRENE-band3__Derby-Ram__Shipman-Old-Woman-by-Shipman.mp3"
+    },
+    {
+      "id": "hhfbc-cyl203_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl203_IRENE-band1__Lily-of-the-West__Olney-Paper-of-Pins-by-Olney.mp3",
+      "duration_s": 127.76,
+      "candidate_sequence": [
+        {
+          "title": "Lily of the West",
+          "performer": "Olney",
+          "resolved_as": null
+        },
+        {
+          "title": "Paper of Pins",
+          "performer": "Olney",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Lily of the West",
+          "performer": "Olney"
+        },
+        {
+          "title": "Paper of Pins",
+          "performer": "Olney"
+        }
+      ],
+      "source_item": "hhfbc-cyl203_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl203_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          8.21,
+          103.78,
+          2.71,
+          94.09,
+          55.55,
+          64.46,
+          99.02,
+          112.09
+        ],
+        "asr_transcript": [],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          8.21
+        ],
+        "confidence": "low",
+        "rationale": "8 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl203_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl203_IRENE-band1__Lily-of-the-West__Olney-Paper-of-Pins-by-Olney.mp3"
+    },
+    {
+      "id": "hhfbc-cyl205_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl205_IRENE-band1__High-Barbary__Morris-Young-Mathyland-by-Potter.mp3",
+      "duration_s": 57.81,
+      "candidate_sequence": [
+        {
+          "title": "High Barbary",
+          "performer": "Morris",
+          "resolved_as": null
+        },
+        {
+          "title": "Young Mathyland",
+          "performer": "Potter",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "High Barbary",
+          "performer": "Morris"
+        },
+        {
+          "title": "Young Mathyland",
+          "performer": "Potter"
+        }
+      ],
+      "source_item": "hhfbc-cyl205_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl205_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          43.21,
+          46.25,
+          31.79,
+          34.61,
+          27.05,
+          53.16,
+          25.97
+        ],
+        "asr_transcript": [],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          43.21
+        ],
+        "confidence": "low",
+        "rationale": "7 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl205_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl205_IRENE-band1__High-Barbary__Morris-Young-Mathyland-by-Potter.mp3"
+    },
+    {
+      "id": "hhfbc-cyl209_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl209_IRENE-band1__The-Old-Oak-Tree__Potter-Flying-Cloud.mp3",
+      "duration_s": 276.15,
+      "candidate_sequence": [
+        {
+          "title": "Old Oak Tree, The",
+          "performer": "Potter",
+          "resolved_as": null
+        },
+        {
+          "title": "Flying Cloud (contd)",
+          "performer": "Potter",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Old Oak Tree, The",
+          "performer": "Potter"
+        },
+        {
+          "title": "Flying Cloud (contd)",
+          "performer": "Potter"
+        }
+      ],
+      "source_item": "hhfbc-cyl209_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl209_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          55.79,
+          29.36,
+          103.44,
+          4.14,
+          177.2,
+          35.32,
+          98.69,
+          60.52
+        ],
+        "asr_transcript": [
+          {
+            "start": 2.35,
+            "end": 11.28,
+            "text": " We cleared our deck for action"
+          },
+          {
+            "start": 11.28,
+            "end": 13.28,
+            "text": " And soon they crossed our squads"
+          },
+          {
+            "start": 13.28,
+            "end": 16.5,
+            "text": " To deck their full-day crimson tide"
+          },
+          {
+            "start": 16.5,
+            "end": 19.5,
+            "text": " We fought till captain's war"
+          },
+          {
+            "start": 19.5,
+            "end": 22.5,
+            "text": " With slain and navy of his men"
+          },
+          {
+            "start": 22.5,
+            "end": 26.5,
+            "text": " When a bomb kills at our ship on fire"
+          },
+          {
+            "start": 26.5,
+            "end": 28.5,
+            "text": " We were forced to surrender"
+          },
+          {
+            "start": 28.5,
+            "end": 31.91,
+            "text": " It's now to lose case"
+          },
+          {
+            "start": 31.91,
+            "end": 36.16,
+            "text": " We are brought down in front"
+          },
+          {
+            "start": 36.16,
+            "end": 38.16,
+            "text": " For the murdering and wandering"
+          },
+          {
+            "start": 38.16,
+            "end": 42.16,
+            "text": " Of many the ships down on the ocean's land"
+          },
+          {
+            "start": 42.16,
+            "end": 44.45,
+            "text": " It is green and bad come"
+          },
+          {
+            "start": 44.45,
+            "end": 47.83,
+            "text": " For never made a resolution"
+          },
+          {
+            "start": 47.83,
+            "end": 51.25,
+            "text": " Come all young men of war"
+          },
+          {
+            "start": 51.25,
+            "end": 62.91,
+            "text": " It has once a nice old ruler"
+          },
+          {
+            "start": 62.91,
+            "end": 64.91,
+            "text": " With a heavy belt of rain"
+          },
+          {
+            "start": 64.91,
+            "end": 67.07,
+            "text": " It's left down by her mother"
+          },
+          {
+            "start": 67.07,
+            "end": 70.07,
+            "text": " Died to never return again"
+          },
+          {
+            "start": 70.07,
+            "end": 72.07,
+            "text": " It's left down by her mother"
+          },
+          {
+            "start": 72.07,
+            "end": 74.07,
+            "text": " Died to be a never-wintered home"
+          },
+          {
+            "start": 74.07,
+            "end": 77.07,
+            "text": " For she was young as well too"
+          },
+          {
+            "start": 77.07,
+            "end": 80.39,
+            "text": " And love has made her bold"
+          },
+          {
+            "start": 80.39,
+            "end": 82.39,
+            "text": " This very night at an old cloud"
+          },
+          {
+            "start": 82.39,
+            "end": 84.39,
+            "text": " Down by the old country"
+          },
+          {
+            "start": 84.39,
+            "end": 86.74,
+            "text": " On its gays so sweet"
+          },
+          {
+            "start": 86.74,
+            "end": 89.74,
+            "text": " Ah, all with him she sings"
+          },
+          {
+            "start": 89.74,
+            "end": 90.74,
+            "text": " What can she follow"
+          },
+          {
+            "start": 90.74,
+            "end": 91.74,
+            "text": " Till he's all grain"
+          },
+          {
+            "start": 91.74,
+            "end": 93.74,
+            "text": " On the captain's loaded horse"
+          },
+          {
+            "start": 93.74,
+            "end": 95.74,
+            "text": " But wrapping her long stalker out"
+          },
+          {
+            "start": 95.74,
+            "end": 98.74,
+            "text": " Of the sea that he swallows her door"
+          },
+          {
+            "start": 98.74,
+            "end": 100.84,
+            "text": " That night at past that morning"
+          },
+          {
+            "start": 100.84,
+            "end": 102.84,
+            "text": " She made her sexy face"
+          },
+          {
+            "start": 102.84,
+            "end": 106.02,
+            "text": " Her mother far too dressed"
+          },
+          {
+            "start": 106.02,
+            "end": 108.02,
+            "text": " And wondering when she's done"
+          },
+          {
+            "start": 108.02,
+            "end": 110.15,
+            "text": " She got up and started out"
+          },
+          {
+            "start": 110.15,
+            "end": 113.15,
+            "text": " With anguishes as wild"
+          },
+          {
+            "start": 113.15,
+            "end": 115.15,
+            "text": " Saying I'll roll between them all"
+          },
+          {
+            "start": 115.15,
+            "end": 116.15,
+            "text": " And around"
+          },
+          {
+            "start": 116.15,
+            "end": 119.31,
+            "text": " I'll find my darling child"
+          },
+          {
+            "start": 119.31,
+            "end": 121.31,
+            "text": " No three long, dreary weeks"
+          },
+          {
+            "start": 121.31,
+            "end": 123.31,
+            "text": " That are so romantic in tomorrow"
+          },
+          {
+            "start": 123.31,
+            "end": 125.34,
+            "text": " The journey through the door"
+          },
+          {
+            "start": 125.34,
+            "end": 128.34,
+            "text": " They'll find that she has not been found"
+          },
+          {
+            "start": 128.34,
+            "end": 130.34,
+            "text": " And then to seek her lonely"
+          },
+          {
+            "start": 130.34,
+            "end": 133.86,
+            "text": " Heart in this poor little strife"
+          },
+          {
+            "start": 133.86,
+            "end": 134.86,
+            "text": " The country greets without"
+          },
+          {
+            "start": 134.86,
+            "end": 137.86,
+            "text": " Really, she's broken our victory"
+          },
+          {
+            "start": 137.86,
+            "end": 141.27,
+            "text": " That very night at past that morning"
+          },
+          {
+            "start": 141.27,
+            "end": 143.27,
+            "text": " She'll leave the old and still sing"
+          },
+          {
+            "start": 143.27,
+            "end": 145.58,
+            "text": " What's all of the pain next day"
+          },
+          {
+            "start": 145.58,
+            "end": 147.58,
+            "text": " For no house with old men around"
+          },
+          {
+            "start": 147.58,
+            "end": 149.71,
+            "text": " They go up hill and they go down"
+          },
+          {
+            "start": 149.71,
+            "end": 152.71,
+            "text": " Dale with a gallant constantly"
+          },
+          {
+            "start": 152.71,
+            "end": 153.71,
+            "text": " Till at length the dogs"
+          },
+          {
+            "start": 153.71,
+            "end": 155.71,
+            "text": " They lost their part"
+          },
+          {
+            "start": 155.71,
+            "end": 159.8,
+            "text": " Down by the old, the dogs began to bark"
+          },
+          {
+            "start": 159.8,
+            "end": 161.8,
+            "text": " And the left of them fell"
+          },
+          {
+            "start": 161.8,
+            "end": 165.41,
+            "text": " And all the had a whispered tune"
+          },
+          {
+            "start": 165.41,
+            "end": 167.41,
+            "text": " Could drive those dogs away"
+          },
+          {
+            "start": 167.41,
+            "end": 169.41,
+            "text": " The gentlemen gathered around"
+          },
+          {
+            "start": 169.41,
+            "end": 172.41,
+            "text": " Then called out for me and said"
+          },
+          {
+            "start": 172.41,
+            "end": 175.41,
+            "text": " They got the ground and well they found"
+          },
+          {
+            "start": 175.41,
+            "end": 179.9,
+            "text": " The ground that once was there"
+          },
+          {
+            "start": 179.9,
+            "end": 181.9,
+            "text": " To breathe the land with warm clothes"
+          },
+          {
+            "start": 181.9,
+            "end": 182.9,
+            "text": " Low"
+          },
+          {
+            "start": 182.9,
+            "end": 184.9,
+            "text": " And long breathed, cut the blood"
+          },
+          {
+            "start": 184.9,
+            "end": 187.9,
+            "text": " And got his ass wrinkled through her clothes"
+          },
+          {
+            "start": 187.9,
+            "end": 189.9,
+            "text": " The grey, too much for the whole sea"
+          },
+          {
+            "start": 189.9,
+            "end": 191.9,
+            "text": " In one day, like his sight"
+          },
+          {
+            "start": 191.9,
+            "end": 193.9,
+            "text": " At the words that he told"
+          },
+          {
+            "start": 193.9,
+            "end": 195.9,
+            "text": " Those eyes that once were blue"
+          },
+          {
+            "start": 195.9,
+            "end": 196.9,
+            "text": " And bright"
+          },
+          {
+            "start": 196.9,
+            "end": 199.9,
+            "text": " And in her sight they found a knife"
+          },
+          {
+            "start": 199.9,
+            "end": 201.9,
+            "text": " Which caused them grief and pain"
+          },
+          {
+            "start": 201.9,
+            "end": 204.9,
+            "text": " And on the hill the gentlemen read"
+          },
+          {
+            "start": 204.9,
+            "end": 206.9,
+            "text": " The gank's the column's the same"
+          },
+          {
+            "start": 206.9,
+            "end": 208.9,
+            "text": " The column said, I don't mind"
+          },
+          {
+            "start": 208.9,
+            "end": 211.9,
+            "text": " See, my throat is full from hell"
+          },
+          {
+            "start": 211.9,
+            "end": 214.9,
+            "text": " All gank's the whole cost of my life"
+          },
+          {
+            "start": 214.9,
+            "end": 216.9,
+            "text": " And the story I would tell"
+          },
+          {
+            "start": 216.9,
+            "end": 220.0,
+            "text": " I once was messy dearly"
+          },
+          {
+            "start": 220.0,
+            "end": 222.0,
+            "text": " I feel like a little clown"
+          },
+          {
+            "start": 222.0,
+            "end": 225.0,
+            "text": " I ganked to my victory"
+          },
+          {
+            "start": 225.0,
+            "end": 227.0,
+            "text": " The triumph draws my heart"
+          },
+          {
+            "start": 227.0,
+            "end": 229.0,
+            "text": " And every time we meet"
+          },
+          {
+            "start": 229.0,
+            "end": 232.0,
+            "text": " She may come quick, make me your bride"
+          },
+          {
+            "start": 232.0,
+            "end": 235.1,
+            "text": " It's all I do and love to do"
+          },
+          {
+            "start": 235.1,
+            "end": 237.54,
+            "text": " She touches my dry"
+          },
+          {
+            "start": 237.54,
+            "end": 239.54,
+            "text": " She cries, cries, till I got"
+          },
+          {
+            "start": 239.54,
+            "end": 242.12,
+            "text": " Higher than every man to me"
+          },
+          {
+            "start": 242.12,
+            "end": 244.12,
+            "text": " Devil whispers, take her life"
+          },
+          {
+            "start": 244.12,
+            "end": 246.12,
+            "text": " And then you will be free"
+          },
+          {
+            "start": 246.12,
+            "end": 249.12,
+            "text": " So then I fall in my hand"
+          },
+          {
+            "start": 249.12,
+            "end": 251.22,
+            "text": " I plunge it in her breath"
+          },
+          {
+            "start": 251.22,
+            "end": 254.22,
+            "text": " And with the guilt I knocked her down"
+          },
+          {
+            "start": 254.22,
+            "end": 256.22,
+            "text": " I'm no need to tell her"
+          },
+          {
+            "start": 256.22,
+            "end": 258.92,
+            "text": " And she knelt down beside me"
+          },
+          {
+            "start": 258.92,
+            "end": 261.92,
+            "text": " Caught in her swell of the pain"
+          },
+          {
+            "start": 261.92,
+            "end": 264.02,
+            "text": " She's the way to stole from his belt"
+          },
+          {
+            "start": 264.02,
+            "end": 266.02,
+            "text": " And fire through his flame"
+          },
+          {
+            "start": 266.02,
+            "end": 269.02,
+            "text": " They buried him where he fell"
+          },
+          {
+            "start": 269.02,
+            "end": 271.02,
+            "text": " No Christian grace on him"
+          },
+          {
+            "start": 271.02,
+            "end": 274.21,
+            "text": " No one was bound to bless the gank"
+          },
+          {
+            "start": 274.21,
+            "end": 276.5,
+            "text": " Gank by me"
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          55.79
+        ],
+        "confidence": "low",
+        "rationale": "8 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl209_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl209_IRENE-band1__The-Old-Oak-Tree__Potter-Flying-Cloud.mp3"
+    },
+    {
+      "id": "hhfbc-cyl237_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl237_IRENE-band1__In-London-Live-a-Merchant__Wilson-Mary-and-Her-Serving-man-by-Wils.mp3",
+      "duration_s": 400.29,
+      "candidate_sequence": [
+        {
+          "title": "In London Live a Merchant",
+          "performer": "Wilson",
+          "resolved_as": null
+        },
+        {
+          "title": "Mary and Her Serving-man",
+          "performer": "Wilson",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "In London Live a Merchant",
+          "performer": "Wilson"
+        },
+        {
+          "title": "Mary and Her Serving-man",
+          "performer": "Wilson"
+        }
+      ],
+      "source_item": "hhfbc-cyl237_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl237_IRENE",
+      "signals": {
+        "energy_gaps_s": [
+          10.55,
+          116.16,
+          228.54,
+          232.37,
+          21.82,
+          3.44,
+          278.84,
+          206.83
+        ],
+        "asr_transcript": [],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [
+          10.55
+        ],
+        "confidence": "low",
+        "rationale": "8 candidate energy gap(s) found - tentative boundaries, unverified."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl237_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl237_IRENE-band1__In-London-Live-a-Merchant__Wilson-Mary-and-Her-Serving-man-by-Wils.mp3"
+    },
+    {
+      "id": "hhfbc-cyl240_IRENE-band1",
+      "file": "confident_batch/hhfbc-cyl240_IRENE-band1__Erins-Green-Shore__MacNelly-Bashful-Country-Lover-by-MacNe.mp3",
+      "duration_s": 346.49,
+      "candidate_sequence": [
+        {
+          "title": "Erin's Green Shore",
+          "performer": "MacNelly",
+          "resolved_as": null
+        },
+        {
+          "title": "Bashful Country Lover",
+          "performer": "MacNelly",
+          "resolved_as": null
+        }
+      ],
+      "all_titles_on_cylinder": [
+        {
+          "title": "Erin's Green Shore",
+          "performer": "MacNelly"
+        },
+        {
+          "title": "Bashful Country Lover",
+          "performer": "MacNelly"
+        }
+      ],
+      "source_item": "hhfbc-cyl240_IRENE",
+      "source_url": "https://archive.org/details/hhfbc-cyl240_IRENE",
+      "signals": {
+        "energy_gaps_s": [],
+        "asr_transcript": [
+          {
+            "start": 279.17,
+            "end": 308.91,
+            "text": " Thank you very much."
+          }
+        ],
+        "asr_caveat": "Draft only - singing/period audio quality makes this unreliable as a literal transcript. Useful as a rough hint toward spoken title announcements or lyric fragments."
+      },
+      "auto_draft": {
+        "boundaries_s": [],
+        "confidence": "none",
+        "rationale": "No energy gap found anywhere in this 346s clip despite 2 titles on the label - this is most likely a continuous as-played medley with no pause between tunes, not a splitting failure. Listen as a medley by default; only attempt manual dividers if you can hear a tune change by ear."
+      },
+      "status": "auto_drafted",
+      "tier": "confident_medley",
+      "human_edit": null,
+      "note": "Tagged 'confident' (clean band file) but the cylinder label lists 2 titles across only 1 band file(s) - this file covers 2 of them, played as a medley.",
+      "preview_file": "needs_qa/hhfbc-cyl240_IRENE-band1_preview32k.mp3",
+      "full_quality_url": "https://github.com/reedharder/flanders-ballad-tracks/blob/main/confident_batch/hhfbc-cyl240_IRENE-band1__Erins-Green-Shore__MacNelly-Bashful-Country-Lover-by-MacNe.mp3"
     }
   ],
   "locations": {
@@ -8665,7 +10134,137 @@
       ],
       "total_titles_recovered": 4281,
       "total_distinct_titles": 2752,
-      "titles_with_repeats": 726
+      "titles_with_repeats": 726,
+      "top_titles_by_genre": {
+        "song": [
+          [
+            "Springfield Mountain",
+            19
+          ],
+          [
+            "Lass of Mohea (Little Mohea)",
+            16
+          ],
+          [
+            "Butcher Boy",
+            14
+          ],
+          [
+            "Lord Banner (Little Musgrave and Lady Barnard)",
+            14
+          ],
+          [
+            "Barbara Allen (Bonny Barbara Allen)",
+            13
+          ],
+          [
+            "Jam on Gerry's Rock",
+            13
+          ],
+          [
+            "Cuckoo",
+            12
+          ],
+          [
+            "[fragment] Unidentified fragment",
+            12
+          ],
+          [
+            "Paper of Pins",
+            11
+          ],
+          [
+            "Derby Ram",
+            11
+          ],
+          [
+            "Fair Fanny Moore",
+            11
+          ],
+          [
+            "Erin's Green Shore",
+            11
+          ],
+          [
+            "Flying Cloud",
+            11
+          ],
+          [
+            "Dying Californian",
+            11
+          ],
+          [
+            "Will the Weaver",
+            10
+          ]
+        ],
+        "instrumental": [
+          [
+            "Portland fancy",
+            2
+          ],
+          [
+            "Steamboat quickstep",
+            1
+          ],
+          [
+            "Lamplighter's hornpipe",
+            1
+          ],
+          [
+            "Miss McLoud's reel",
+            1
+          ],
+          [
+            "Doll jig",
+            1
+          ],
+          [
+            "Rafferty's reel",
+            1
+          ],
+          [
+            "Morning glory reel",
+            1
+          ],
+          [
+            "McLoud's reel",
+            1
+          ],
+          [
+            "Carpenter's reel\",",
+            1
+          ],
+          [
+            "Jennie Lind Polka",
+            1
+          ],
+          [
+            "Old hoe down",
+            1
+          ],
+          [
+            "Fisher's hornpipe",
+            1
+          ],
+          [
+            "Hornpipe",
+            1
+          ],
+          [
+            "California reel",
+            1
+          ],
+          [
+            "Durang's hornpipe",
+            1
+          ]
+        ]
+      },
+      "genre_breakdown_heuristic": {
+        "song": 4260,
+        "instrumental": 21
+      }
     },
     "available_now": {
       "top_titles": [
@@ -8844,6 +10443,104 @@
         "low": 3,
         "likely": 3,
         "unknown": 2
+      },
+      "top_titles_by_genre": {
+        "song": [
+          [
+            "erins green shore",
+            3
+          ],
+          [
+            "lord bakeman",
+            3
+          ],
+          [
+            "springfield mountain",
+            2
+          ],
+          [
+            "outlandish knight",
+            2
+          ],
+          [
+            "fair charlotte",
+            2
+          ],
+          [
+            "biddy will meet me",
+            2
+          ],
+          [
+            "children in the wood",
+            2
+          ],
+          [
+            "derby ram",
+            2
+          ],
+          [
+            "flying cloud",
+            2
+          ],
+          [
+            "cherry tree carol",
+            2
+          ],
+          [
+            "wife wrapped in wethers skin",
+            2
+          ],
+          [
+            "lawyer outwitted",
+            2
+          ],
+          [
+            "lord thomas",
+            2
+          ],
+          [
+            "stratton mountain tragedy",
+            1
+          ],
+          [
+            "clinton county jail",
+            1
+          ]
+        ],
+        "instrumental": [
+          [
+            "steamboat quickstep",
+            1
+          ],
+          [
+            "lamplighters hornpipe",
+            1
+          ],
+          [
+            "miss mclouds reel",
+            1
+          ],
+          [
+            "larry ogaffe",
+            1
+          ],
+          [
+            "turkey in the straw",
+            1
+          ],
+          [
+            "arkansas traveler",
+            1
+          ],
+          [
+            "old hoe down",
+            1
+          ],
+          [
+            "devils dream",
+            1
+          ]
+        ]
       }
     }
   }

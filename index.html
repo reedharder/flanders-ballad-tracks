@@ -1,4 +1,6 @@
 <title>Flanders Collection — Track Library &amp; QA Bench</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHDRvePEK3M5JCVbHOa1yfbNhHZ8=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
   :root{
     --bg:#ECE7DA; --panel:#F6F2E7; --panel2:#EFE9DA; --line:#D9D2BF;
@@ -180,7 +182,7 @@
 
   <section id="view-library" class="view active">
     <h2 class="sec">Confident</h2>
-    <p class="sec-note">Correctly bounded and correctly labeled. Play, download, or drop straight into any standard audio player. All <span id="confCountNote">—</span> tracks play at full quality — this page is served directly from the <a href="https://github.com/reedharder/flanders-ballad-tracks" target="_blank" rel="noopener">data repo</a> via GitHub Pages.</p>
+    <p class="sec-note">Correctly bounded and correctly labeled. Play, download, or drop straight into any standard audio player. A curated 25 play from files bundled directly in this page; the rest of the <span id="confCountNote">—</span> tracks stream live from the public <a href="https://github.com/reedharder/flanders-ballad-tracks" target="_blank" rel="noopener">data repo</a> ("↗ external" tag) — if your browser blocks that, each card falls back to a direct GitHub link.</p>
 
     <div class="controls-row">
       <input type="text" id="searchBox" placeholder="Search title, performer, or town…">
@@ -218,8 +220,8 @@
 
   <section id="view-map" class="view">
     <h2 class="sec">Where the songs were collected</h2>
-    <p class="sec-note">Performer hometowns, geocoded offline and plotted on a simplified basemap (no live map-tile service — the published page can't reach external hosts). Circle size = number of tracks collected from that town.</p>
-    <svg id="mapSvg" viewBox="0 0 600 500" style="width:100%; height:auto; background:var(--panel2); border:1px solid var(--line); border-radius:10px;"></svg>
+    <p class="sec-note">Performer hometowns, geocoded offline and plotted on real state boundaries. Click a circle to filter the Library, scroll to zoom, drag to pan. This Artifact can't load live map tiles (content-security-policy), so no street-level basemap here — the <a href="https://reedharder.github.io/flanders-ballad-tracks/" target="_blank" rel="noopener">GitHub Pages version</a> has a full interactive Leaflet/OpenStreetMap map instead.</p>
+    <div id="leafletMap" style="height:520px; border:1px solid var(--line); border-radius:10px;"></div>
     <div id="mapLegend" class="legend-row" style="margin-top:10px;"></div>
   </section>
 
@@ -315,6 +317,7 @@ function humanControls(t){
 
   const speedPct = ov.speed?.rate ? Math.round(ov.speed.rate*100) : 100;
   const speedFlagged = !!ov.speed?.flagged;
+  const preservePitch = !!ov.speed?.preservePitch;
 
   return `
     <div class="human-controls">
@@ -323,8 +326,11 @@ function humanControls(t){
       </div>
       <div class="hc-row">
         <span class="hc-label">Playback speed:</span>
-        <input type="range" min="80" max="120" value="${speedPct}" class="speed-slider" oninput="setPlaybackRate('${t.id}', this.value)">
+        <input type="range" min="80" max="120" value="${speedPct}" class="speed-slider" id="speedslider-${t.id}" oninput="setPlaybackRate('${t.id}', this.value)">
         <span class="status" id="speedlabel-${t.id}">${speedPct}%</span>
+        <label class="hc-checkbox" title="Default (off): speed and pitch move together, simulating an actual different physical recording speed. On: tempo changes but pitch stays put - useful for judging tempo alone.">
+          <input type="checkbox" ${preservePitch?'checked':''} onchange="setPreservePitch('${t.id}', this.checked)"> preserve pitch (tempo only)
+        </label>
         <label class="hc-checkbox"><input type="checkbox" ${speedFlagged?'checked':''} onchange="setSpeedFlag('${t.id}', this.checked)"> flag possible recording-speed issue</label>
       </div>
     </div>`;
@@ -341,13 +347,22 @@ function setGenreOverride(trackId, type){
   const ctl = document.getElementById(`humanctl-${trackId}`);
   if (ctl && t) ctl.innerHTML = humanControls(t);
 }
+function applyRateAndPitch(el, rate, preservePitch){
+  if (!el) return;
+  el.playbackRate = rate;
+  el.preservesPitch = preservePitch; el.mozPreservesPitch = preservePitch; el.webkitPreservesPitch = preservePitch;
+}
 function setPlaybackRate(trackId, pct){
   const rate = pct/100;
-  const el = document.getElementById(`audio-${trackId}`);
-  if (el) { el.playbackRate = rate; el.preservesPitch = false; el.mozPreservesPitch = false; el.webkitPreservesPitch = false; }
-  document.getElementById(`speedlabel-${trackId}`).textContent = `${pct}%`;
   const existing = getOverride(trackId)?.speed || {};
+  applyRateAndPitch(document.getElementById(`audio-${trackId}`), rate, !!existing.preservePitch);
+  document.getElementById(`speedlabel-${trackId}`).textContent = `${pct}%`;
   saveOverride(trackId, {speed: {...existing, rate}});
+}
+function setPreservePitch(trackId, preservePitch){
+  const existing = getOverride(trackId)?.speed || {rate: 1};
+  applyRateAndPitch(document.getElementById(`audio-${trackId}`), existing.rate || 1, preservePitch);
+  saveOverride(trackId, {speed: {...existing, preservePitch}});
 }
 function setSpeedFlag(trackId, flagged){
   const existing = getOverride(trackId)?.speed || {rate: 1};
@@ -359,8 +374,13 @@ function warnBlock(t){
   if (t.parser_note) parts.push(`<b>Label note:</b> ${t.parser_note}`);
   if (t.duration_flag) parts.push(`<b>⚠ Short clip:</b> ${t.duration_flag}`);
   if (t.raw_title && t.raw_title !== t.title) parts.push(`<b>As originally transcribed:</b> "${t.raw_title}"`);
+  if (t.has_medley_qa) parts.push(`<b>🎻 Likely a medley:</b> this file probably contains more than one of the titles on its label, played straight through. <a class="dl" href="#" onclick="openMedleyInQaBench('${t.id}'); return false;">Review/split in QA Bench →</a>`);
   if (!parts.length) return '';
   return `<div class="proc-note" style="border-left:3px solid var(--crit);">${parts.join('<br>')}</div>`;
+}
+function openMedleyInQaBench(trackId){
+  document.querySelector('nav.tabs button[data-view="qa"]').click();
+  selectQa(trackId);
 }
 function versionBadge(t){
   if (!t.version_count || t.version_count <= 1) return '';
@@ -375,12 +395,16 @@ function jumpToSibling(el){
   if (target) { target.scrollIntoView({behavior:'smooth', block:'center'}); target.style.outline = '2px solid var(--accent)'; setTimeout(()=>target.style.outline='', 1500); }
 }
 
-// Deployed on GitHub Pages directly from this data repo, so every file is
-// same-origin - no CSP/cross-origin concerns, no bundling budget. Everything
-// just plays from its real relative path.
-function resolveAudioUrl(file, trackId){
-  return file;
-}
+const BUNDLED_SET = new Set([ /* unused on Pages - kept so shared code referencing it doesn't break */
+  "D61A01","cyl67-band1",
+  "hhfbc-cyl48-band1","hhfbc-cyl52-band2","hhfbc-cyl16-band6","hhfbc-cyl25-band1",
+  "hhfbc-cyl70-band1","hhfbc-cyl71-band2","hhfbc-cyl57-band3","hhfbc-cyl62-band2",
+  "hhfbc-c2-band1","hhfbc-cyl84_IRENE-band3","hhfbc-cyl120_IRENE-band4",
+  "hhfbc-cyl197_IRENE-band3","hhfbc-cyl201_IRENE-band1","hhfbc-cyl92_IRENE-band2",
+  "hhfbc-cyl120_IRENE-band1","hhfbc-cyl81_IRENE-band1",
+  "hhfbc-cyl63-band2","hhfbc-cyl47-band2","hhfbc-cyl47-band1","hhfbc-cyl63-band1","hhfbc-c5-band1",
+]);
+function resolveAudioUrl(file, trackId){ return file; }
 
 function confidentFiltered(){
   const q = (document.getElementById('searchBox')?.value || '').toLowerCase().trim();
@@ -425,10 +449,9 @@ function switchAudio(id, denoised){
 
 function applySavedSpeedOverrides(list){
   list.forEach(t => {
-    const rate = getOverride(t.id)?.speed?.rate;
-    if (!rate || rate === 1) return;
-    const el = document.getElementById(`audio-${t.id}`);
-    if (el) { el.playbackRate = rate; el.preservesPitch = false; el.mozPreservesPitch = false; el.webkitPreservesPitch = false; }
+    const speed = getOverride(t.id)?.speed;
+    if (!speed || !speed.rate || speed.rate === 1) return;
+    applyRateAndPitch(document.getElementById(`audio-${t.id}`), speed.rate, !!speed.preservePitch);
   });
 }
 
@@ -517,7 +540,7 @@ function renderQaList(){
   const el = document.getElementById('qa-list');
   el.innerHTML = MANIFEST.needs_qa.map(item => `
     <button class="item" id="qaitem-${item.id}" onclick="selectQa('${item.id}')">
-      ${item.id}
+      ${item.id} ${item.tier === 'confident_medley' ? '<span style="opacity:.6;">🎻 medley</span>' : ''}
       <div class="meta">${item.duration_s ? item.duration_s.toFixed(0)+'s' : (item.expected_track_count+' expected tracks')}</div>
     </button>`).join('');
 }
@@ -569,6 +592,7 @@ function renderBench(){
       <button class="ghost" id="playpause">▶ Play</button>
       <span class="time-readout" id="timeread">0:00 / 0:00</span>
       <button class="ghost" onclick="zoomReset()">Reset zoom</button>
+      <button class="ghost" onclick="addSplitAtPlayhead()" title="Insert a new boundary at the current playback position - for medleys with no detectable silence gap, where you have to split by ear">+ Split at playhead</button>
       <button class="ghost" onclick="revertAllBoundaries()" title="Snap all boundary markers back to the computational draft">↺ Revert boundaries to auto-draft</button>
     </div>
     <div class="segtable" id="segtable"></div>
@@ -576,7 +600,7 @@ function renderBench(){
       <button id="export-qa">Export corrected cut list (JSON)</button>
     </div>
   `;
-  audioEl = new Audio(item.file);
+  audioEl = new Audio(item.preview_file || item.file);
   audioEl.preload = 'auto';
   document.getElementById('playpause').onclick = () => {
     if (audioEl.paused) { audioEl.play(); document.getElementById('playpause').textContent = '⏸ Pause'; }
@@ -600,7 +624,7 @@ function renderBench(){
 
 async function loadPeaksAndDraw(){
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const resp = await fetch(currentQa.item.file);
+  const resp = await fetch(currentQa.item.preview_file || currentQa.item.file);
   const buf = await resp.arrayBuffer();
   const decoded = await audioCtx.decodeAudioData(buf);
   currentQa.duration = decoded.duration;
@@ -752,8 +776,32 @@ function revertSeg(i){
   currentQa.segState[i] = {label: currentQa.autoLabels[i], tier: 'auto_drafted'};
   renderSegTable();
 }
+function addSplitAtPlayhead(){
+  if (!audioEl) return;
+  const t = audioEl.currentTime;
+  if (t < 0.3 || t > currentQa.duration - 0.3) { alert('Move the playhead into the middle of the audio first.'); return; }
+  if (currentQa.boundaries.some(b => Math.abs(b - t) < 0.5)) { alert('Already a boundary near here.'); return; }
+
+  // which existing segment does this fall into, before inserting?
+  const segsBefore = currentSegments();
+  const segIdx = segsBefore.findIndex(s => t > s.start && t < s.end);
+  if (segIdx === -1) return;
+
+  currentQa.boundaries.push(t);
+  currentQa.boundaries.sort((a,b) => a-b);
+  // duplicate the split segment's label/state into both halves - human can retitle each
+  const splitState = currentQa.segState[segIdx] || {label: '', tier: 'human_tentative'};
+  currentQa.segState.splice(segIdx, 1,
+    {label: splitState.label, tier: 'human_tentative'},
+    {label: splitState.label, tier: 'human_tentative'});
+  // autoLabels/autoBoundaries stay as the original computational draft, so "revert" still works
+  drawWave();
+  renderSegTable();
+}
+
 function revertAllBoundaries(){
   currentQa.boundaries = currentQa.autoBoundaries.slice();
+  currentQa.segState = currentQa.autoLabels.map(l => ({label: l, tier: 'auto_drafted'}));
   drawWave();
   renderSegTable();
 }
@@ -776,63 +824,49 @@ function exportQa(){
   a.click();
 }
 
-/* ---------------- MAP ---------------- */
-// Real (lightly simplified) state boundaries - PublicaMundi MappingAPI us-states.json,
-// a standard public-domain/CC0-style GeoJSON dataset commonly used for US choropleth maps.
-const STATE_OUTLINES = {"CT":[[42.039,-73.054],[42.023,-71.799],[42.006,-71.799],[41.415,-71.799],[41.322,-71.86],[41.338,-71.947],[41.261,-72.385],[41.283,-72.906],[41.146,-73.13],[41.102,-73.371],[40.987,-73.656],[41.102,-73.727],[41.212,-73.481],[41.294,-73.552],[42.05,-73.486],[42.039,-73.054]],"ME":[[43.058,-70.704],[43.129,-70.824],[43.228,-70.808],[43.343,-70.967],[44.657,-71.033],[45.303,-71.082],[45.44,-70.649],[45.511,-70.72],[45.665,-70.556],[45.736,-70.386],[45.796,-70.419],[45.889,-70.26],[46.065,-70.31],[46.327,-70.211],[46.415,-70.058],[46.694,-69.997],[47.461,-69.225],[47.428,-69.044],[47.242,-69.033],[47.176,-68.902],[47.286,-68.579],[47.286,-68.376],[47.357,-68.234],[47.198,-67.954],[47.067,-67.79],[45.944,-67.779],[45.676,-67.801],[45.605,-67.456],[45.49,-67.505],[45.38,-67.418],[45.281,-67.489],[45.128,-67.347],[45.161,-67.16],[44.805,-66.98],[44.646,-67.188],[44.706,-67.308],[44.597,-67.407],[44.624,-67.549],[44.531,-67.566],[44.542,-67.752],[44.328,-68.048],[44.476,-68.119],[44.487,-68.223],[44.328,-68.174],[44.252,-68.404],[44.378,-68.458],[44.312,-68.568],[44.312,-68.825],[44.46,-68.831],[44.427,-68.984],[44.323,-68.957],[44.104,-69.099],[44.044,-69.072],[43.923,-69.258],[43.967,-69.444],[43.841,-69.554],[43.825,-69.707],[43.72,-69.833],[43.742,-69.986],[43.852,-70.03],[43.677,-70.255],[43.567,-70.195],[43.529,-70.359],[43.436,-70.37],[43.321,-70.556],[43.058,-70.704]],"MA":[[42.888,-70.918],[42.872,-70.819],[42.696,-70.781],[42.554,-70.824],[42.422,-70.983],[42.269,-70.989],[42.247,-70.77],[42.088,-70.638],[41.962,-70.66],[41.93,-70.551],[41.814,-70.54],[41.716,-70.26],[41.809,-69.937],[41.672,-70.008],[41.552,-70.485],[41.546,-70.66],[41.639,-70.764],[41.612,-70.928],[41.541,-70.934],[41.497,-71.12],[41.678,-71.197],[41.71,-71.224],[41.782,-71.328],[42.017,-71.383],[42.017,-71.531],[42.006,-71.799],[42.023,-71.799],[42.039,-73.054],[42.05,-73.486],[42.088,-73.508],[42.746,-73.267],[42.729,-72.457],[42.696,-71.295],[42.789,-71.186],[42.888,-70.918]],"NH":[[45.303,-71.082],[44.657,-71.033],[43.343,-70.967],[43.228,-70.808],[43.129,-70.824],[43.058,-70.704],[42.872,-70.819],[42.888,-70.918],[42.789,-71.186],[42.696,-71.295],[42.729,-72.457],[42.806,-72.544],[42.954,-72.533],[43.008,-72.446],[43.151,-72.457],[43.573,-72.38],[43.77,-72.205],[43.994,-72.117],[44.076,-72.029],[44.323,-72.035],[44.416,-71.701],[44.586,-71.536],[44.75,-71.63],[44.914,-71.493],[45.013,-71.504],[45.27,-71.361],[45.243,-71.131],[45.303,-71.082]],"NY":[[45.013,-73.344],[44.805,-73.333],[44.619,-73.388],[44.438,-73.295],[44.246,-73.322],[44.044,-73.437],[43.77,-73.349],[43.688,-73.404],[43.523,-73.245],[42.833,-73.278],[42.746,-73.267],[42.088,-73.508],[42.05,-73.486],[41.294,-73.552],[41.212,-73.481],[41.102,-73.727],[40.987,-73.656],[40.905,-73.229],[40.966,-73.141],[40.966,-72.774],[40.998,-72.588],[41.157,-72.281],[41.042,-72.259],[40.993,-72.101],[40.845,-72.467],[40.626,-73.24],[40.582,-73.563],[40.593,-73.776],[40.544,-73.935],[40.708,-74.023],[40.998,-73.902],[41.141,-74.237],[41.36,-74.697],[41.431,-74.74],[41.437,-74.894],[41.606,-75.075],[41.754,-75.053],[41.869,-75.173],[41.864,-75.25],[42.001,-75.359],[42.001,-79.763],[42.253,-79.763],[42.269,-79.763],[42.554,-79.149],[42.691,-79.051],[42.784,-78.854],[42.954,-78.93],[42.987,-79.012],[43.26,-79.073],[43.375,-78.487],[43.37,-77.966],[43.343,-77.758],[43.233,-77.534],[43.277,-77.391],[43.271,-76.959],[43.343,-76.696],[43.523,-76.416],[43.529,-76.236],[43.803,-76.23],[43.961,-76.137],[44.071,-76.362],[44.197,-76.312],[44.367,-75.912],[44.515,-75.765],[44.849,-75.283],[45.019,-74.828],[44.991,-74.149],[45.013,-73.344]],"RI":[[42.017,-71.531],[42.017,-71.383],[41.782,-71.328],[41.71,-71.224],[41.727,-71.345],[41.579,-71.449],[41.371,-71.482],[41.322,-71.86],[41.415,-71.799],[42.006,-71.799],[42.017,-71.531]],"VT":[[45.013,-71.504],[44.914,-71.493],[44.75,-71.63],[44.586,-71.536],[44.416,-71.701],[44.323,-72.035],[44.076,-72.029],[43.994,-72.117],[43.77,-72.205],[43.573,-72.38],[43.151,-72.457],[43.008,-72.446],[42.954,-72.533],[42.806,-72.544],[42.729,-72.457],[42.746,-73.267],[42.833,-73.278],[43.523,-73.245],[43.688,-73.404],[43.77,-73.349],[44.044,-73.437],[44.246,-73.322],[44.438,-73.295],[44.619,-73.388],[44.805,-73.333],[45.013,-73.344],[45.002,-72.309],[45.013,-71.504]]};
-function project(lat, lon, bounds){
-  const {latMin, latMax, lonMin, lonMax, w, h, pad} = bounds;
-  const x = pad + (lon - lonMin) / (lonMax - lonMin) * (w - 2*pad);
-  const y = pad + (latMax - lat) / (latMax - latMin) * (h - 2*pad);
-  return [x, y];
-}
+/* ---------------- MAP (Leaflet, real OSM tiles) ---------------- */
+let leafletMap = null;
+let leafletMarkers = [];
 
 function renderMap(){
-  const svg = document.getElementById('mapSvg');
-  if (!svg) return;
+  const el = document.getElementById('leafletMap');
+  if (!el || typeof L === 'undefined') return;
+
   const locCounts = {};
   MANIFEST.confident.forEach(t => { if (t.location) locCounts[t.location] = (locCounts[t.location]||0) + 1; });
-
-  const bounds = {latMin: 40.8, latMax: 45.6, lonMin: -74.2, lonMax: -66.8, w: 600, h: 500, pad: 40};
-  let svgContent = '';
-
-  Object.values(STATE_OUTLINES).forEach(poly => {
-    const pts = poly.map(([lat,lon]) => project(lat,lon,bounds).join(',')).join(' ');
-    svgContent += `<polygon points="${pts}" fill="none" stroke="var(--line)" stroke-width="1.5" opacity="0.9"/>`;
-  });
-
   const maxCount = Math.max(1, ...Object.values(locCounts));
-  const points = Object.entries(locCounts).map(([loc, count]) => {
+
+  if (!leafletMap) {
+    leafletMap = L.map('leafletMap', {scrollWheelZoom: true}).setView([43.8, -71.5], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
+    }).addTo(leafletMap);
+  }
+  leafletMarkers.forEach(m => leafletMap.removeLayer(m));
+  leafletMarkers = [];
+
+  Object.entries(locCounts).forEach(([loc, count]) => {
     const coords = MANIFEST.locations[loc];
-    if (!coords) return null;
-    const [x, y] = project(coords[0], coords[1], bounds);
-    const r = 4 + 14 * Math.sqrt(count / maxCount);
-    return {loc, count, x, y, r};
-  }).filter(Boolean);
-
-  points.forEach(p => {
-    svgContent += `<circle class="map-point" cx="${p.x}" cy="${p.y}" r="${p.r}"><title>${p.loc}: ${p.count} track${p.count>1?'s':''}</title></circle>`;
+    if (!coords) return;
+    const r = 5 + 13 * Math.sqrt(count / maxCount);
+    const marker = L.circleMarker([coords[0], coords[1]], {
+      radius: r, fillColor: '#A9731E', fillOpacity: 0.55, weight: 1, color: '#7A5115',
+    }).addTo(leafletMap);
+    const tracksHere = MANIFEST.confident.filter(t => t.location === loc);
+    const sample = tracksHere.slice(0, 6).map(t => `${t.title} — ${t.performer}`).join('<br>');
+    const more = tracksHere.length > 6 ? `<br><em>+ ${tracksHere.length - 6} more</em>` : '';
+    marker.bindPopup(`
+      <b>${loc}</b><br>${count} track${count>1?'s':''}<br><br>
+      ${sample}${more}<br><br>
+      <a href="#" onclick="jumpToLibrarySearch('${loc.replace(/'/g,"\\'")}'); return false;">View all in Library →</a>
+    `);
+    leafletMarkers.push(marker);
   });
 
-  // label only the top N by count, with simple vertical collision avoidance
-  const labelPts = [...points].sort((a,b) => b.count - a.count).slice(0, 10);
-  const placed = [];
-  labelPts.forEach(p => {
-    let ly = p.y - p.r - 6;
-    const text = `${p.loc.split(',')[0]} (${p.count})`;
-    const textW = text.length * 5.6;
-    while (placed.some(q => Math.abs(q.x - p.x) < (textW+q.w)/2 + 4 && Math.abs(q.y - ly) < 11)) {
-      ly -= 12;
-    }
-    placed.push({x: p.x, y: ly, w: textW});
-    svgContent += `<text x="${p.x}" y="${ly}" class="map-label" text-anchor="middle">${text}</text>`;
-  });
-
-  svg.innerHTML = svgContent;
   document.getElementById('mapLegend').innerHTML = `
-    <span class="sw"><i style="background:var(--accent); opacity:.55; border-radius:50%;"></i>town with ≥1 digitized track (circle area ∝ track count)</span>
-    <span>${points.length} distinct towns plotted · top 10 labeled directly, hover any circle for the rest</span>
-    <span style="opacity:.7;">state outlines are a coarse schematic, not surveyed borders</span>`;
+    <span class="sw"><i style="background:#A9731E; opacity:.55; border-radius:50%;"></i>town with ≥1 digitized track (circle area ∝ track count) — click a marker for its tracks</span>
+    <span>${Object.keys(locCounts).length} distinct towns plotted</span>`;
 }
 
 /* ---------------- STATS ---------------- */
@@ -858,16 +892,29 @@ function jumpToLibrarySearch(text){
   box.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
+let statsGenre = 'all';
+
 function renderStats(){
   const el = document.getElementById('statsBody');
   const cs = MANIFEST.collection_stats;
   if (!cs) { el.innerHTML = '<p>No collection stats available.</p>'; return; }
   const s = cs[statsScope];
+  const genreNote = statsGenre === 'all' ? '' :
+    statsScope === 'full_archive'
+      ? ' (title-keyword heuristic across the whole census — unverified, likely undercounts instrumentals since it only catches dance-tune-named titles)'
+      : ' (per-track genre, same confidence basis as the Library tags)';
+  const titleEntries = statsGenre === 'all' ? s.top_titles : (s.top_titles_by_genre?.[statsGenre] || []);
 
   el.innerHTML = `
-    <div class="bench-row" style="margin-bottom:18px;">
+    <div class="bench-row" style="margin-bottom:10px;">
       <button class="ghost toggle ${statsScope==='full_archive'?'active':''}" onclick="setStatsScope('full_archive')">Full archive (426 items, all described titles)</button>
       <button class="ghost toggle ${statsScope==='available_now'?'active':''}" onclick="setStatsScope('available_now')">Split &amp; available now (${MANIFEST.confident.length} tracks)</button>
+    </div>
+    <div class="bench-row" style="margin-bottom:18px;">
+      <span class="hc-label">Filter by:</span>
+      <button class="ghost toggle ${statsGenre==='all'?'active':''}" onclick="setStatsGenre('all')">All</button>
+      <button class="ghost toggle ${statsGenre==='song'?'active':''}" onclick="setStatsGenre('song')">Song only</button>
+      <button class="ghost toggle ${statsGenre==='instrumental'?'active':''}" onclick="setStatsGenre('instrumental')">Instrumental only</button>
     </div>
     <div class="stats" style="margin:0 0 28px;">
       <div class="stat"><span class="n">${s.total_titles_recovered.toLocaleString()}</span><span class="l">${statsScope==='full_archive' ? 'individual titles recovered across the whole archive (not all cut into tracks yet)' : 'tracks actually split and playable/downloadable so far'}</span></div>
@@ -876,12 +923,13 @@ function renderStats(){
     </div>
     ${statsScope==='available_now' ? barList('Song vs. instrumental', 'Only exists for the tracks actually split — no reliable instrument signal is available archive-wide (see confidence breakdown below).', Object.entries(s.genre_breakdown||{}), null) : ''}
     ${statsScope==='available_now' ? barList('...and how sure we are', '"confirmed" = matched a specific Traditional Tune Archive page or an explicit label note. "guess"/"low"/"likely" = title-keyword heuristic only, not verified — most of this batch, honestly.', Object.entries(s.genre_confidence_breakdown||{}), null) : ''}
-    ${barList('Most-collected titles', statsScope==='full_archive' ? 'Across the entire 426-item census, including titles not yet cut into individual tracks.' : 'Among the tracks already split and in the library.', s.top_titles, 15)}
+    ${barList(`Most-collected titles${statsGenre!=='all' ? ' — ' + (statsGenre==='song'?'songs':'instrumentals') : ''}`, (statsScope==='full_archive' ? 'Across the entire 426-item census, including titles not yet cut into individual tracks.' : 'Among the tracks already split and in the library.') + genreNote, titleEntries, 15)}
     ${barList('Most-recorded performers', statsScope==='full_archive' ? 'Who Flanders and her collectors returned to most often, archive-wide.' : 'Among the tracks already split and in the library.', s.top_performers, 15)}
     ${barList('Most-represented towns', 'Raw location-string counts (dates not yet stripped from every entry, so some towns are split across a few near-duplicate strings).', s.top_locations, 15)}
   `;
 }
 function setStatsScope(scope){ statsScope = scope; renderStats(); }
+function setStatsGenre(genre){ statsGenre = genre; renderStats(); }
 
 /* tabs */
 document.querySelectorAll('nav.tabs button').forEach(btn => {
