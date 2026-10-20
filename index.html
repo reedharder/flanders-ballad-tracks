@@ -1,0 +1,816 @@
+<title>Flanders Collection — Track Library &amp; QA Bench</title>
+<style>
+  :root{
+    --bg:#ECE7DA; --panel:#F6F2E7; --panel2:#EFE9DA; --line:#D9D2BF;
+    --ink:#241F18; --ink-soft:#54493A; --ink-mute:#8A7D66;
+    --accent:#A9731E; --accent-soft:#A9731E1E;
+    --good:#1F8F5F; --good-soft:#1F8F5F17;
+    --crit:#B4432F; --crit-soft:#B4432F17;
+    --font-display:"Iowan Old Style","Palatino Linotype","Palatino",Georgia,serif;
+    --font-body:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  :root[data-theme="dark"]{
+    --bg:#15140F; --panel:#1C1A14; --panel2:#201D16; --line:#352F23;
+    --ink:#EAE3D2; --ink-soft:#C9C0AC; --ink-mute:#938768;
+    --accent:#C99A3E; --accent-soft:#C99A3E22;
+    --good:#2E9E6C; --good-soft:#2E9E6C1E;
+    --crit:#C65F3E; --crit-soft:#C65F3E1E;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15140F; --panel:#1C1A14; --panel2:#201D16; --line:#352F23;
+      --ink:#EAE3D2; --ink-soft:#C9C0AC; --ink-mute:#938768;
+      --accent:#C99A3E; --accent-soft:#C99A3E22;
+      --good:#2E9E6C; --good-soft:#2E9E6C1E;
+      --crit:#C65F3E; --crit-soft:#C65F3E1E;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.5;}
+  .shell{max-width:1040px; margin:0 auto; padding:0 20px 80px;}
+
+  header.top{padding:30px 20px 0; border-bottom:1px solid var(--line); background:linear-gradient(180deg,var(--accent-soft),transparent 80%);}
+  header.top .inner{max-width:1040px; margin:0 auto;}
+  .eyebrow{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 6px;}
+  h1{font-family:var(--font-display); font-size:27px; font-weight:600; margin:0 0 4px;}
+  .sub{color:var(--ink-soft); font-size:14px; margin:0 0 18px; max-width:62ch;}
+
+  nav.tabs{display:flex; gap:4px; margin-top:6px;}
+  nav.tabs button{
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.03em; text-transform:uppercase;
+    background:none; border:none; padding:10px 16px; cursor:pointer; color:var(--ink-mute);
+    border-bottom:2px solid transparent; transition:color .15s;
+  }
+  nav.tabs button.active{color:var(--ink); border-bottom-color:var(--accent);}
+  nav.tabs button:hover{color:var(--ink);}
+
+  main{padding-top:26px;}
+  .view{display:none;} .view.active{display:block;}
+
+  h2.sec{font-family:var(--font-display); font-size:19px; margin:0 0 4px;}
+  .sec-note{color:var(--ink-mute); font-size:13px; margin:0 0 14px; max-width:62ch;}
+
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .stats .stat{background:var(--panel); padding:16px 14px;}
+  .stats .stat .n{font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--ink); display:block; line-height:1.1;}
+  .stats .stat .l{font-size:12px; color:var(--ink-mute); margin-top:4px; line-height:1.35;}
+  @media(max-width:700px){ .stats{grid-template-columns:1fr;} }
+  .controls-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:14px 0 18px; padding:12px 14px; background:var(--panel2); border-radius:8px;}
+  .controls-row input[type=text]{flex:1; min-width:180px; padding:7px 11px; border-radius:6px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:13px;}
+  .version-badge{font-family:var(--font-mono); font-size:10.5px; padding:2px 8px; border-radius:10px; background:var(--panel2); color:var(--ink-mute); border:1px solid var(--line); cursor:pointer;}
+  .version-badge:hover{color:var(--accent); border-color:var(--accent);}
+  .no-audio-note{font-size:12px; color:var(--ink-mute); font-style:italic; margin-top:8px;}
+  .audio-fallback{font-size:12px; color:var(--crit); margin-top:6px;}
+  .map-point{fill:var(--accent); fill-opacity:.55; stroke:var(--accent-strong,var(--accent)); stroke-width:1; cursor:pointer;}
+  .map-point:hover{fill-opacity:.85;}
+  .map-label{font-family:var(--font-mono); font-size:9px; fill:var(--ink-mute);}
+  .stat-block{margin-bottom:28px;}
+  .stat-block h3{font-family:var(--font-display); font-size:16px; margin:0 0 10px;}
+  .bar-row{display:grid; grid-template-columns:160px 1fr 50px; gap:8px; align-items:center; font-size:12.5px; margin-bottom:5px;}
+  .bar-row .label{color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .bar-row .bar{height:12px; background:var(--panel2); border-radius:3px; overflow:hidden;}
+  .bar-row .bar i{display:block; height:100%; background:var(--accent);}
+  .bar-row .count{font-family:var(--font-mono); color:var(--ink-mute); text-align:right;}
+
+  .grid{display:grid; gap:12px; margin-bottom:34px;}
+
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:9px; padding:14px 16px;}
+  .card .top-row{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .card h3{font-family:var(--font-display); font-size:16px; margin:0; font-weight:600;}
+  .meta{font-size:12.5px; color:var(--ink-mute); margin-top:2px;}
+  .tag{
+    font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    padding:2px 8px; border-radius:20px; font-weight:600; white-space:nowrap;
+  }
+  .tag.good{background:var(--good-soft); color:var(--good);}
+  .tag.accent{background:var(--accent-soft); color:var(--accent);}
+  .tag.crit{background:var(--crit-soft); color:var(--crit);}
+  audio{width:100%; margin-top:10px; height:32px;}
+  .row{display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;}
+  select, button, input[type=text]{
+    font-family:var(--font-body); font-size:13px; padding:6px 10px; border-radius:6px;
+    border:1px solid var(--line); background:var(--panel2); color:var(--ink);
+  }
+  button{cursor:pointer; background:var(--accent-soft); border-color:transparent; color:var(--accent); font-weight:600;}
+  button:hover{filter:brightness(1.05);}
+  button.ghost{background:none; border:1px solid var(--line); color:var(--ink-soft); font-weight:500;}
+  button.confirmed{background:var(--good-soft); color:var(--good);}
+  a.dl{font-size:12.5px; color:var(--ink-mute); text-decoration:none; border-bottom:1px dotted var(--line);}
+  a.dl:hover{color:var(--accent);}
+  .links{margin-top:9px; display:flex; gap:14px; font-size:12.5px;}
+
+  /* QA bench */
+  .qa-layout{display:grid; grid-template-columns:230px 1fr; gap:20px;}
+  .qa-list{display:flex; flex-direction:column; gap:6px;}
+  .qa-list button.item{
+    text-align:left; background:var(--panel); border:1px solid var(--line); padding:10px 12px; border-radius:7px;
+    color:var(--ink); font-weight:600; font-size:13px;
+  }
+  .qa-list button.item.selected{border-color:var(--accent); background:var(--accent-soft);}
+  .qa-list button.item .meta{font-weight:400; margin-top:3px;}
+
+  .bench{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 20px;}
+  .bench h3{font-family:var(--font-display); margin:0 0 4px;}
+  .bench .meta{margin-bottom:12px;}
+  canvas#wave{width:100%; height:120px; display:block; border-radius:6px; background:var(--panel2); cursor:crosshair;}
+  .transport{display:flex; gap:8px; align-items:center; margin-top:10px;}
+  .time-readout{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-mute);}
+
+  .segtable{margin-top:16px; display:flex; flex-direction:column; gap:10px;}
+  .segcard{border:1px solid var(--line); border-radius:8px; padding:10px 14px; background:var(--panel);}
+  .segcard .seghead{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:space-between;}
+  .segcard .seghead .left{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .segcard input[type=text]{width:100%; margin-top:6px;}
+  .nudge{display:flex; gap:3px;}
+  .nudge button{padding:2px 7px; font-size:11px;}
+  .flagpill{font-family:var(--font-mono); font-size:10px; padding:1px 6px; border-radius:10px;}
+  .flagpill.duration_outlier{background:var(--crit-soft); color:var(--crit);}
+  .flagpill.medley_member{background:var(--accent-soft); color:var(--accent);}
+  .flagpill.boundary_adjacent{background:var(--line); color:var(--ink-mute);}
+
+  .genre-badge{font-family:var(--font-mono); font-size:10px; padding:2px 7px; border-radius:10px; white-space:nowrap;}
+  .genre-badge.song{background:var(--good-soft); color:var(--good);}
+  .genre-badge.instrumental{background:var(--accent-soft); color:var(--accent);}
+  .genre-badge.spoken, .genre-badge.uncertain{background:var(--line); color:var(--ink-mute);}
+  .proc-note{font-size:11.5px; color:var(--ink-mute); margin-top:8px; padding:8px 10px; background:var(--panel2); border-radius:6px;}
+  .proc-note b{color:var(--ink-soft);}
+
+  .tier-badge{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; padding:3px 9px; border-radius:20px; font-weight:600;}
+  .tier-badge.auto_drafted{background:var(--line); color:var(--ink-soft);}
+  .tier-badge.human_tentative{background:var(--accent-soft); color:var(--accent);}
+  .tier-badge.confirmed{background:var(--good-soft); color:var(--good);}
+
+  .seq-strip{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 16px; padding:12px; background:var(--panel2); border-radius:8px;}
+  .seq-chip{font-size:11.5px; padding:4px 9px; border-radius:6px; border:1px solid var(--line); background:var(--panel);}
+  .seq-chip.resolved{border-color:var(--good); color:var(--good); text-decoration:line-through; opacity:.75;}
+  .seq-chip .p{color:var(--ink-mute); font-size:10.5px;}
+
+  .evidence{font-size:12px; color:var(--ink-soft); background:var(--panel2); border-radius:6px; padding:8px 10px; margin-top:6px; font-style:italic;}
+  .rationale{font-size:12.5px; color:var(--ink-soft); background:var(--accent-soft); border-radius:6px; padding:10px 12px; margin:10px 0;}
+  .rationale b{color:var(--accent);}
+  .revert-row{display:flex; gap:6px; margin-top:4px;}
+
+  footer{padding:30px 0 10px; font-size:12px; color:var(--ink-mute); font-family:var(--font-mono); text-align:center;}
+  .empty{color:var(--ink-mute); font-size:13px; padding:20px; text-align:center;}
+</style>
+
+<header class="top"><div class="inner">
+  <p class="eyebrow">Flanders Ballad Collection · prototype</p>
+  <h1>Track Library &amp; QA Bench</h1>
+  <p class="sub">Real audio, split and tagged from 82 archive.org items so far (81 clean wax cylinders + one medley-heavy tape reel), sorted by how much to trust the cut.</p>
+  <nav class="tabs">
+    <button data-view="library" class="active">Library</button>
+    <button data-view="qa">QA Bench</button>
+    <button data-view="map">Map</button>
+    <button data-view="stats">Stats</button>
+  </nav>
+</div></header>
+
+<div class="shell"><main>
+
+  <section id="view-library" class="view active">
+    <h2 class="sec">Confident</h2>
+    <p class="sec-note">Correctly bounded and correctly labeled. Play, download, or drop straight into any standard audio player. All <span id="confCountNote">—</span> tracks play at full quality — this page is served directly from the <a href="https://github.com/reedharder/flanders-ballad-tracks" target="_blank" rel="noopener">data repo</a> via GitHub Pages.</p>
+
+    <div class="controls-row">
+      <input type="text" id="searchBox" placeholder="Search title, performer, or town…">
+      <select id="sortSelect">
+        <option value="title">Sort: Title</option>
+        <option value="performer">Sort: Performer</option>
+        <option value="location">Sort: Location</option>
+        <option value="versions">Sort: Most versions first</option>
+      </select>
+      <select id="genreFilter">
+        <option value="">All instrumentation</option>
+        <option value="song">Song (vocal)</option>
+        <option value="instrumental">Instrumental</option>
+      </select>
+      <span class="status" id="resultCount"></span>
+    </div>
+
+    <div class="grid" id="list-confident"></div>
+
+    <h2 class="sec">Pending label</h2>
+    <p class="sec-note">The audio itself is a clean single song — no internal gap — but which of the remaining titles it is depends on resolving the ambiguous clips in the QA Bench. Confirm your best guess, or leave it for later.</p>
+    <div class="grid" id="list-pending"></div>
+    <button class="ghost" id="export-pending" style="margin-bottom:34px;">Export confirmed labels (JSON)</button>
+  </section>
+
+  <section id="view-qa" class="view">
+    <h2 class="sec">QA Bench</h2>
+    <p class="sec-note">Automated segmentation flagged these as ambiguous. Listen, drag the candidate boundaries (or nudge with the ± buttons), confirm a label per segment, then export the corrected cut list.</p>
+    <div class="qa-layout">
+      <div class="qa-list" id="qa-list"></div>
+      <div class="bench" id="qa-bench"><div class="empty">Pick an item on the left to begin.</div></div>
+    </div>
+  </section>
+
+  <section id="view-map" class="view">
+    <h2 class="sec">Where the songs were collected</h2>
+    <p class="sec-note">Performer hometowns, geocoded offline and plotted on a simplified basemap (no live map-tile service — the published page can't reach external hosts). Circle size = number of tracks collected from that town.</p>
+    <svg id="mapSvg" viewBox="0 0 600 500" style="width:100%; height:auto; background:var(--panel2); border:1px solid var(--line); border-radius:10px;"></svg>
+    <div id="mapLegend" class="legend-row" style="margin-top:10px;"></div>
+  </section>
+
+  <section id="view-stats" class="view">
+    <h2 class="sec">Collection stats</h2>
+    <p class="sec-note">Computed from all 4,281 titles recovered across the full 426-item archive.org census — not just the tracks split so far — so this reflects the whole collection's shape, including tunes not yet cut into individual files.</p>
+    <div id="statsBody"></div>
+  </section>
+
+</main>
+<footer>Helen Hartness Flanders Ballad Collection · Middlebury College Special Collections &amp; Archives · CC BY</footer>
+</div>
+
+<script>
+let MANIFEST = null;
+const confirmedLabels = {}; // id -> label string
+
+fetch('manifest.json').then(r => r.json()).then(m => { MANIFEST = m; render(); });
+
+function fmtTime(s){
+  s = Math.max(0, s);
+  const m = Math.floor(s/60), r = Math.floor(s%60);
+  return `${m}:${String(r).padStart(2,'0')}`;
+}
+
+let BUNDLED_FILES = null; // populated lazily by checking which audio files actually resolve
+
+function render(){
+  document.getElementById('confCountNote').textContent = MANIFEST.confident.length;
+  renderConfident();
+  renderPending();
+  renderQaList();
+  renderMap();
+  renderStats();
+  wireControls();
+}
+
+const CONF_LABEL = {confirmed: '✓ confirmed (TTA/label match)', likely: 'likely', guess: 'guess', low: 'low confidence'};
+function genreBadge(g){
+  if (!g) return '';
+  const typeLabel = {song: 'Song', instrumental: 'Instrumental', spoken: 'Spoken', uncertain: 'Uncertain'}[g.type] || g.type;
+  const label = g.label || `${typeLabel}${g.confidence ? ' · ' + (CONF_LABEL[g.confidence]||g.confidence) : ''}`;
+  const badge = `<span class="genre-badge ${g.type}" title="${(g.detail||'').replace(/"/g,'&quot;')}">${label}</span>`;
+  return g.tta_url ? `${badge}<a class="dl" href="${g.tta_url}" target="_blank" rel="noopener" style="margin-left:4px;">Tune Archive ↗</a>` : badge;
+}
+function procNote(p){
+  if (!p) return '';
+  const declick = p.declicked ? '✓ declicked' : '✗ not declicked';
+  const denoise = p.denoised ? '✓ denoised' : '✗ not denoised (hiss/hum still present)';
+  return `<div class="proc-note"><b>Processing:</b> ${declick} · ${denoise}<br>${p.note}</div>`;
+}
+function warnBlock(t){
+  const parts = [];
+  if (t.parser_note) parts.push(`<b>Label note:</b> ${t.parser_note}`);
+  if (t.duration_flag) parts.push(`<b>⚠ Short clip:</b> ${t.duration_flag}`);
+  if (t.raw_title && t.raw_title !== t.title) parts.push(`<b>As originally transcribed:</b> "${t.raw_title}"`);
+  if (!parts.length) return '';
+  return `<div class="proc-note" style="border-left:3px solid var(--crit);">${parts.join('<br>')}</div>`;
+}
+function versionBadge(t){
+  if (!t.version_count || t.version_count <= 1) return '';
+  const sibs = (t.version_siblings||[]).join(',');
+  return `<span class="version-badge" onclick="jumpToSibling(this)" data-sibs="${sibs}" title="Other recordings of this same title">${t.version_count}× in collection</span>`;
+}
+function jumpToSibling(el){
+  const sibs = (el.dataset.sibs||'').split(',').filter(Boolean);
+  if (!sibs.length) return;
+  document.getElementById('searchBox').value = '';
+  const target = document.getElementById(`card-${sibs[0]}`);
+  if (target) { target.scrollIntoView({behavior:'smooth', block:'center'}); target.style.outline = '2px solid var(--accent)'; setTimeout(()=>target.style.outline='', 1500); }
+}
+
+// A handful of tracks are bundled locally in the artifact itself (fast, no
+// external dependency). Everything else streams from the public data repo -
+// github.com/reedharder/flanders-ballad-tracks - since the artifact can't
+// bundle all 173 tracks x 2 (original+denoised) within its size budget.
+const BUNDLED_SET = new Set([
+  "D61A01","cyl67-band1",
+  "hhfbc-cyl48-band1","hhfbc-cyl52-band2","hhfbc-cyl16-band6","hhfbc-cyl25-band1",
+  "hhfbc-cyl70-band1","hhfbc-cyl71-band2","hhfbc-cyl57-band3","hhfbc-cyl62-band2",
+  "hhfbc-c2-band1","hhfbc-cyl84_IRENE-band3","hhfbc-cyl120_IRENE-band4",
+  "hhfbc-cyl197_IRENE-band3","hhfbc-cyl201_IRENE-band1","hhfbc-cyl92_IRENE-band2",
+  "hhfbc-cyl102_IRENE-band1","hhfbc-cyl120_IRENE-band1","hhfbc-cyl81_IRENE-band1","hhfbc-cyl86_IRENE-band1",
+  "hhfbc-cyl63-band2","hhfbc-cyl47-band2","hhfbc-cyl47-band1","hhfbc-cyl63-band1","hhfbc-c5-band1",
+]);
+// Deployed on GitHub Pages directly from this data repo, so every file is
+// same-origin - no CSP/cross-origin concerns, no bundling budget. Everything
+// just plays from its real relative path.
+function resolveAudioUrl(file, trackId){
+  return file;
+}
+
+function confidentFiltered(){
+  const q = (document.getElementById('searchBox')?.value || '').toLowerCase().trim();
+  const genre = document.getElementById('genreFilter')?.value || '';
+  const audio = document.getElementById('audioFilter')?.value || '';
+  const sort = document.getElementById('sortSelect')?.value || 'title';
+  let list = MANIFEST.confident.filter(t => {
+    if (q && !(`${t.title} ${t.performer} ${t.location}`.toLowerCase().includes(q))) return false;
+    if (genre && t.genre?.type !== genre) return false;
+    if (audio === 'bundled' && !BUNDLED_SET.has(t.id)) return false;
+    return true;
+  });
+  list.sort((a,b) => {
+    if (sort === 'versions') return (b.version_count||0) - (a.version_count||0);
+    const av = (a[sort]||'').toString().toLowerCase(), bv = (b[sort]||'').toString().toLowerCase();
+    return av.localeCompare(bv);
+  });
+  return list;
+}
+
+function renderAudioBlock(t){
+  const src = resolveAudioUrl(t.file, t.id);
+  if (!t.denoised_file) {
+    return `<audio controls preload="none" src="${src}"></audio>`;
+  }
+  return `
+    <div class="row" style="margin:6px 0;">
+      <button class="ghost toggle active" id="toggle-orig-${t.id}" onclick="switchAudio('${t.id}', false)">Unfiltered</button>
+      <button class="ghost toggle" id="toggle-dn-${t.id}" onclick="switchAudio('${t.id}', true)">Denoised (${t.denoised_retained_pct}% energy kept)</button>
+    </div>
+    <audio controls preload="none" src="${src}" id="audio-${t.id}"></audio>`;
+}
+function handleAudioError(el, trackId){
+  externalAudioBlocked = true;
+  el.style.display = 'none';
+  const fb = document.getElementById(`fallback-${trackId}`);
+  const t = MANIFEST.confident.find(c => c.id === trackId) || MANIFEST.pending_label.find(c => c.id === trackId);
+  const ghPage = t ? `https://github.com/reedharder/flanders-ballad-tracks/blob/main/${t.file}` : 'https://github.com/reedharder/flanders-ballad-tracks';
+  if (fb) {
+    fb.style.display = 'block';
+    fb.innerHTML = `⚠ External audio didn't load here (likely this artifact's content-security-policy). ` +
+      `<a class="dl" href="${ghPage}" target="_blank" rel="noopener">Open on GitHub ↗</a>`;
+  }
+}
+function switchAudio(id, denoised){
+  const t = MANIFEST.confident.find(c => c.id === id);
+  const el = document.getElementById(`audio-${id}`);
+  const wasPlaying = !el.paused;
+  const time = el.currentTime;
+  el.src = resolveAudioUrl(denoised ? t.denoised_file : t.file, denoised ? null : id);
+  document.getElementById(`toggle-orig-${id}`).classList.toggle('active', !denoised);
+  document.getElementById(`toggle-dn-${id}`).classList.toggle('active', denoised);
+  el.currentTime = time;
+  if (wasPlaying) el.play();
+}
+
+function renderConfident(){
+  const el = document.getElementById('list-confident');
+  const list = confidentFiltered();
+  document.getElementById('resultCount').textContent = `${list.length} of ${MANIFEST.confident.length} tracks`;
+  el.innerHTML = list.map(t => {
+    const durText = t.duration_s ? ` · ${t.duration_s.toFixed(0)}s` : '';
+    return `
+    <div class="card" id="card-${t.id}">
+      <div class="top-row">
+        <h3>${t.title}</h3>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="tag good">confident</span>${genreBadge(t.genre)}${versionBadge(t)}</div>
+      </div>
+      <div class="meta">${t.performer} · ${t.location}${durText}</div>
+      ${renderAudioBlock(t)}
+      <div class="links">
+        <a class="dl" href="${resolveAudioUrl(t.file, t.id)}" download>Download</a>
+        <a class="dl" href="https://github.com/reedharder/flanders-ballad-tracks/blob/main/${t.file}" target="_blank" rel="noopener">On GitHub ↗</a>
+        <a class="dl" href="${t.source_url}" target="_blank" rel="noopener">Original archive.org item ↗</a>
+      </div>
+      <div class="meta" style="margin-top:8px;">${t.note}</div>
+      ${procNote(t.processing)}
+      ${warnBlock(t)}
+    </div>`;
+  }).join('');
+}
+
+function wireControls(){
+  ['searchBox','sortSelect','genreFilter','audioFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el._wired) { el.addEventListener('input', renderConfident); el.addEventListener('change', renderConfident); el._wired = true; }
+  });
+}
+
+function renderPending(){
+  const el = document.getElementById('list-pending');
+  el.innerHTML = MANIFEST.pending_label.map(t => `
+    <div class="card" id="card-${t.id}">
+      <div class="top-row">
+        <h3>${t.id}</h3>
+        <div style="display:flex; gap:6px;"><span class="tag accent">pending label</span>${genreBadge(t.genre)}</div>
+      </div>
+      <div class="meta">${t.duration_s.toFixed(0)}s · ${t.note}</div>
+      <audio controls preload="none" src="${t.file}"></audio>
+      <div class="row">
+        <select id="sel-${t.id}">
+          <option value="">— choose a title —</option>
+          ${t.candidates.map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+        <button onclick="confirmPending('${t.id}')" id="btn-${t.id}">Confirm</button>
+      </div>
+      <div class="links"><a class="dl" href="${t.source_url}" target="_blank" rel="noopener">Original archive.org item ↗</a></div>
+      ${procNote(t.processing)}
+    </div>`).join('');
+}
+
+function confirmPending(id){
+  const val = document.getElementById(`sel-${id}`).value;
+  if (!val) return;
+  confirmedLabels[id] = val;
+  const btn = document.getElementById(`btn-${id}`);
+  btn.textContent = 'Confirmed ✓';
+  btn.classList.add('confirmed');
+}
+
+document.getElementById('export-pending').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(confirmedLabels, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'confirmed_labels.json';
+  a.click();
+});
+
+/* ---------------- QA BENCH ---------------- */
+let currentQa = null;
+let audioCtx = null;
+let peaks = null;
+let audioEl = null;
+let dragIdx = null;
+
+function renderQaList(){
+  const el = document.getElementById('qa-list');
+  el.innerHTML = MANIFEST.needs_qa.map(item => `
+    <button class="item" id="qaitem-${item.id}" onclick="selectQa('${item.id}')">
+      ${item.id}
+      <div class="meta">${item.duration_s ? item.duration_s.toFixed(0)+'s' : (item.expected_track_count+' expected tracks')}</div>
+    </button>`).join('');
+}
+
+function defaultLabelsFor(item){
+  if (item.per_segment) return item.per_segment.map(t => `${t.code} ${t.title} / ${t.performer}`);
+  // cylinder band: guess labels from the next unresolved items in the cylinder's known song order
+  const unresolved = item.candidate_sequence.filter(s => !s.resolved_as);
+  const n = (item.auto_draft.boundaries_s || []).length + 1;
+  return Array.from({length: n}, (_, i) => unresolved[i] ? `${unresolved[i].title} / ${unresolved[i].performer} (guess — order-based)` : '(unidentified)');
+}
+
+async function selectQa(id){
+  document.querySelectorAll('#qa-list .item').forEach(b => b.classList.remove('selected'));
+  document.getElementById(`qaitem-${id}`).classList.add('selected');
+  const item = MANIFEST.needs_qa.find(x => x.id === id);
+  const autoBoundaries = (item.auto_draft.boundaries_s || []).slice();
+  const autoLabels = defaultLabelsFor(item);
+  currentQa = {
+    item,
+    autoBoundaries, autoLabels,
+    boundaries: autoBoundaries.slice(),
+    segLabels: autoLabels,
+    segState: autoLabels.map(l => ({label: l, tier: 'auto_drafted'})),
+  };
+  renderBench();
+}
+
+function seqStrip(item){
+  return `<div class="seq-strip">${item.candidate_sequence.map(s =>
+    `<span class="seq-chip ${s.resolved_as ? 'resolved' : ''}">${s.title} <span class="p">— ${s.performer}</span>${s.resolved_as ? ' ✓' : ''}</span>`
+  ).join('')}</div>`;
+}
+
+function renderBench(){
+  const { item } = currentQa;
+  const bench = document.getElementById('qa-bench');
+  const asrCaveat = item.signals && item.signals.asr_caveat ? `<div class="evidence">⚠ ${item.signals.asr_caveat}</div>` : '';
+  bench.innerHTML = `
+    <h3>${item.id} ${genreBadge(item.genre)}</h3>
+    <div class="meta">${item.note || ''} — <a class="dl" href="${item.source_url}" target="_blank" rel="noopener">original item ↗</a>${item.full_quality_url ? ` · <a class="dl" href="${item.full_quality_url}" target="_blank" rel="noopener">full-quality source ↗</a>` : ''}</div>
+    ${procNote(item.processing)}
+    <p class="sec-note" style="margin-top:12px;">Known song order for this source (clue for placing cuts/labels — ✓ = already resolved elsewhere):</p>
+    ${seqStrip(item)}
+    <div class="rationale"><b>Computational draft:</b> ${item.auto_draft.rationale} <span style="opacity:.7;">(confidence: ${item.auto_draft.confidence})</span></div>
+    ${asrCaveat}
+    <canvas id="wave" width="1000" height="120"></canvas>
+    <div class="transport">
+      <button class="ghost" id="playpause">▶ Play</button>
+      <span class="time-readout" id="timeread">0:00 / 0:00</span>
+      <button class="ghost" onclick="zoomReset()">Reset zoom</button>
+      <button class="ghost" onclick="revertAllBoundaries()" title="Snap all boundary markers back to the computational draft">↺ Revert boundaries to auto-draft</button>
+    </div>
+    <div class="segtable" id="segtable"></div>
+    <div class="row" style="margin-top:14px;">
+      <button id="export-qa">Export corrected cut list (JSON)</button>
+    </div>
+  `;
+  audioEl = new Audio(item.file);
+  audioEl.preload = 'auto';
+  document.getElementById('playpause').onclick = () => {
+    if (audioEl.paused) { audioEl.play(); document.getElementById('playpause').textContent = '⏸ Pause'; }
+    else { audioEl.pause(); document.getElementById('playpause').textContent = '▶ Play'; }
+  };
+  audioEl.addEventListener('timeupdate', () => {
+    document.getElementById('timeread').textContent = `${fmtTime(audioEl.currentTime)} / ${fmtTime(audioEl.duration||0)}`;
+    drawWave();
+  });
+  audioEl.addEventListener('ended', () => { document.getElementById('playpause').textContent = '▶ Play'; });
+  document.getElementById('export-qa').onclick = exportQa;
+
+  loadPeaksAndDraw();
+  renderSegTable();
+  const canvas = document.getElementById('wave');
+  canvas.addEventListener('mousedown', onCanvasDown);
+  canvas.addEventListener('mousemove', onCanvasMove);
+  window.addEventListener('mouseup', onCanvasUp);
+  canvas.addEventListener('click', onCanvasClick);
+}
+
+async function loadPeaksAndDraw(){
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const resp = await fetch(currentQa.item.file);
+  const buf = await resp.arrayBuffer();
+  const decoded = await audioCtx.decodeAudioData(buf);
+  currentQa.duration = decoded.duration;
+  const ch = decoded.getChannelData(0);
+  const buckets = 1000;
+  const step = Math.floor(ch.length / buckets);
+  const p = new Float32Array(buckets);
+  for (let i=0;i<buckets;i++){
+    let max=0;
+    const start=i*step, end=Math.min(start+step, ch.length);
+    for (let j=start;j<end;j++){ const v=Math.abs(ch[j]); if (v>max) max=v; }
+    p[i]=max;
+  }
+  peaks = p;
+  drawWave();
+}
+
+let viewStart = 0, viewEnd = null; // zoom window in seconds
+
+function zoomReset(){ viewStart = 0; viewEnd = currentQa.duration; drawWave(); }
+
+function drawWave(){
+  const canvas = document.getElementById('wave');
+  if (!canvas || !peaks) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const dur = currentQa.duration;
+  if (viewEnd === null) { viewStart = 0; viewEnd = dur; }
+  const vs = viewStart, ve = viewEnd;
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#A9731E';
+  const crit = getComputedStyle(document.documentElement).getPropertyValue('--crit').trim() || '#B4432F';
+  const mid = h/2;
+  ctx.fillStyle = accent;
+  for (let x=0; x<w; x++){
+    const t = vs + (x/w)*(ve-vs);
+    const bi = Math.floor((t/dur)*peaks.length);
+    const v = peaks[Math.max(0,Math.min(peaks.length-1,bi))] || 0;
+    const barH = Math.max(1, v*h*0.9);
+    ctx.fillRect(x, mid-barH/2, 1, barH);
+  }
+  // playhead
+  if (audioEl && audioEl.currentTime >= vs && audioEl.currentTime <= ve){
+    const x = ((audioEl.currentTime-vs)/(ve-vs))*w;
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#241F18';
+    ctx.fillRect(x, 0, 1.5, h);
+  }
+  // boundaries
+  currentQa.boundaries.forEach((b, i) => {
+    if (b < vs || b > ve) return;
+    const x = ((b-vs)/(ve-vs))*w;
+    ctx.fillStyle = crit;
+    ctx.fillRect(x-1, 0, 2, h);
+  });
+}
+
+function timeToX(t){ const ve=viewEnd??currentQa.duration; return ((t-viewStart)/(ve-viewStart))*1000; }
+function xToTime(x){ const ve=viewEnd??currentQa.duration; return viewStart + (x/1000)*(ve-viewStart); }
+
+function onCanvasDown(e){
+  const rect = e.target.getBoundingClientRect();
+  const x = (e.clientX-rect.left)/rect.width*1000;
+  const t = xToTime(x);
+  // find nearest boundary within ~1.5% of view width
+  let nearest = -1, nearestDist = Infinity;
+  currentQa.boundaries.forEach((b,i) => {
+    const d = Math.abs(timeToX(b)-x);
+    if (d < nearestDist){ nearestDist = d; nearest = i; }
+  });
+  if (nearestDist < 14) dragIdx = nearest;
+}
+function onCanvasMove(e){
+  if (dragIdx === null) return;
+  const rect = e.target.getBoundingClientRect();
+  const x = (e.clientX-rect.left)/rect.width*1000;
+  let t = xToTime(x);
+  t = Math.max(0.1, Math.min(currentQa.duration-0.1, t));
+  currentQa.boundaries[dragIdx] = t;
+  drawWave();
+  renderSegTable();
+}
+function onCanvasUp(){ dragIdx = null; }
+function onCanvasClick(e){
+  if (dragIdx !== null) return;
+  const rect = e.target.getBoundingClientRect();
+  const x = (e.clientX-rect.left)/rect.width*1000;
+  const t = xToTime(x);
+  audioEl.currentTime = t;
+}
+
+function currentSegments(){
+  const bounds = [0, ...[...currentQa.boundaries].sort((a,b)=>a-b), currentQa.duration];
+  return bounds.slice(0,-1).map((s,i) => ({start:s, end:bounds[i+1]}));
+}
+
+function evidenceFor(i){
+  const item = currentQa.item;
+  if (item.per_segment && item.per_segment[i]) return item.per_segment[i].asr_evidence;
+  const segs = currentSegments();
+  const {start, end} = segs[i];
+  const transcript = (item.signals && item.signals.asr_transcript) || [];
+  const bits = transcript.filter(s => s.start < end + 3 && s.end > start - 3).map(s => s.text.trim()).filter(Boolean);
+  return bits.join(' / ').slice(0, 220) || '(no ASR text in this window)';
+}
+function flagFor(i){
+  const item = currentQa.item;
+  return item.per_segment && item.per_segment[i] ? item.per_segment[i].flag : null;
+}
+
+function renderSegTable(){
+  const segs = currentSegments();
+  const cards = segs.map((s, i) => {
+    const st = currentQa.segState[i] || {label: '', tier: 'auto_drafted'};
+    const flag = flagFor(i);
+    const canRevertToAuto = st.tier !== 'auto_drafted';
+    return `
+      <div class="segcard">
+        <div class="seghead">
+          <div class="left">
+            <span class="time-readout">${fmtTime(s.start)}–${fmtTime(s.end)}</span>
+            <span class="tier-badge ${st.tier}">${st.tier.replace('_',' ')}</span>
+            ${flag ? `<span class="flagpill ${flag}">${flag.replace('_',' ')}</span>` : ''}
+          </div>
+          <div class="revert-row">
+            ${canRevertToAuto ? `<button class="ghost" onclick="revertSeg(${i})" title="Discard edits, go back to the computational draft">↺ auto-draft</button>` : ''}
+            <button class="ghost ${st.tier==='confirmed' ? 'confirmed' : ''}" onclick="toggleConfirm(${i})">${st.tier==='confirmed' ? '✓ Confirmed' : 'Confirm'}</button>
+          </div>
+        </div>
+        <input type="text" value="${st.label.replace(/"/g,'&quot;')}" onchange="setSegLabel(${i}, this.value)">
+        <div class="nudge" style="margin-top:6px;">
+          ${i < segs.length-1 ? `<span class="time-readout" style="margin-right:4px;">nudge boundary:</span><button onclick="nudge(${i}, -0.2)">−0.2s</button><button onclick="nudge(${i}, 0.2)">+0.2s</button>` : ''}
+        </div>
+        <div class="evidence">ASR nearby: “${evidenceFor(i)}”</div>
+      </div>`;
+  }).join('');
+  document.getElementById('segtable').innerHTML = cards;
+}
+
+function setSegLabel(i, val){
+  currentQa.segState[i] = {label: val, tier: val === currentQa.autoLabels[i] ? 'auto_drafted' : 'human_tentative'};
+  renderSegTable();
+}
+function toggleConfirm(i){
+  const st = currentQa.segState[i];
+  st.tier = st.tier === 'confirmed' ? 'human_tentative' : 'confirmed';
+  renderSegTable();
+}
+function revertSeg(i){
+  currentQa.segState[i] = {label: currentQa.autoLabels[i], tier: 'auto_drafted'};
+  renderSegTable();
+}
+function revertAllBoundaries(){
+  currentQa.boundaries = currentQa.autoBoundaries.slice();
+  drawWave();
+  renderSegTable();
+}
+function nudge(i, delta){
+  currentQa.boundaries[i] = Math.max(0.1, Math.min(currentQa.duration-0.1, currentQa.boundaries[i]+delta));
+  drawWave();
+  renderSegTable();
+}
+
+function exportQa(){
+  const segs = currentSegments();
+  const out = segs.map((s,i) => ({
+    start_s: Math.round(s.start*100)/100, end_s: Math.round(s.end*100)/100,
+    label: currentQa.segState[i].label, status: currentQa.segState[i].tier,
+  }));
+  const blob = new Blob([JSON.stringify({item: currentQa.item.id, segments: out}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${currentQa.item.id}_corrected_cuts.json`;
+  a.click();
+}
+
+/* ---------------- MAP ---------------- */
+// Deliberately coarse (<10 vertices/state) schematic outlines, not surveyed borders -
+// enough to orient the eye, not a GIS map. See design note in the Map tab.
+const STATE_OUTLINES = {
+  VT: [[45.01,-73.35],[45.01,-71.5],[42.73,-72.4],[42.75,-73.25],[45.01,-73.35]],
+  NH: [[45.3,-71.5],[45.0,-70.7],[43.1,-70.75],[42.7,-72.4],[45.0,-71.5]],
+  ME: [[47.3,-69.0],[45.3,-67.0],[43.65,-70.2],[44.3,-71.1],[45.3,-71.1],[47.3,-69.0]],
+  MA: [[42.75,-73.3],[42.7,-70.85],[41.5,-70.0],[41.3,-71.8],[42.0,-73.5],[42.75,-73.3]],
+  RI: [[42.0,-71.8],[42.0,-71.1],[41.15,-71.2],[41.3,-71.9],[42.0,-71.8]],
+  CT: [[42.05,-73.5],[42.05,-71.8],[41.0,-71.8],[41.0,-73.7],[42.05,-73.5]],
+};
+function project(lat, lon, bounds){
+  const {latMin, latMax, lonMin, lonMax, w, h, pad} = bounds;
+  const x = pad + (lon - lonMin) / (lonMax - lonMin) * (w - 2*pad);
+  const y = pad + (latMax - lat) / (latMax - latMin) * (h - 2*pad);
+  return [x, y];
+}
+
+function renderMap(){
+  const svg = document.getElementById('mapSvg');
+  if (!svg) return;
+  const locCounts = {};
+  MANIFEST.confident.forEach(t => { if (t.location) locCounts[t.location] = (locCounts[t.location]||0) + 1; });
+
+  const bounds = {latMin: 40.8, latMax: 45.6, lonMin: -74.2, lonMax: -66.8, w: 600, h: 500, pad: 40};
+  let svgContent = '';
+
+  Object.values(STATE_OUTLINES).forEach(poly => {
+    const pts = poly.map(([lat,lon]) => project(lat,lon,bounds).join(',')).join(' ');
+    svgContent += `<polygon points="${pts}" fill="none" stroke="var(--line)" stroke-width="1.5" opacity="0.9"/>`;
+  });
+
+  const maxCount = Math.max(1, ...Object.values(locCounts));
+  const points = Object.entries(locCounts).map(([loc, count]) => {
+    const coords = MANIFEST.locations[loc];
+    if (!coords) return null;
+    const [x, y] = project(coords[0], coords[1], bounds);
+    const r = 4 + 14 * Math.sqrt(count / maxCount);
+    return {loc, count, x, y, r};
+  }).filter(Boolean);
+
+  points.forEach(p => {
+    svgContent += `<circle class="map-point" cx="${p.x}" cy="${p.y}" r="${p.r}"><title>${p.loc}: ${p.count} track${p.count>1?'s':''}</title></circle>`;
+  });
+
+  // label only the top N by count, with simple vertical collision avoidance
+  const labelPts = [...points].sort((a,b) => b.count - a.count).slice(0, 10);
+  const placed = [];
+  labelPts.forEach(p => {
+    let ly = p.y - p.r - 6;
+    const text = `${p.loc.split(',')[0]} (${p.count})`;
+    const textW = text.length * 5.6;
+    while (placed.some(q => Math.abs(q.x - p.x) < (textW+q.w)/2 + 4 && Math.abs(q.y - ly) < 11)) {
+      ly -= 12;
+    }
+    placed.push({x: p.x, y: ly, w: textW});
+    svgContent += `<text x="${p.x}" y="${ly}" class="map-label" text-anchor="middle">${text}</text>`;
+  });
+
+  svg.innerHTML = svgContent;
+  document.getElementById('mapLegend').innerHTML = `
+    <span class="sw"><i style="background:var(--accent); opacity:.55; border-radius:50%;"></i>town with ≥1 digitized track (circle area ∝ track count)</span>
+    <span>${points.length} distinct towns plotted · top 10 labeled directly, hover any circle for the rest</span>
+    <span style="opacity:.7;">state outlines are a coarse schematic, not surveyed borders</span>`;
+}
+
+/* ---------------- STATS ---------------- */
+let statsScope = 'full_archive';
+
+function barList(title, note, entries, max) {
+  const top = max ? entries.slice(0, max) : entries;
+  const maxCount = top.length ? top[0][1] : 1;
+  return `<div class="stat-block"><h3>${title}</h3><p class="sec-note" style="margin-bottom:10px;">${note}</p>
+    ${top.map(([label, count]) => `
+      <div class="bar-row">
+        <div class="label" title="${label}">${label}</div>
+        <div class="bar"><i style="width:${100*count/maxCount}%"></i></div>
+        <div class="count">${count}×</div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function renderStats(){
+  const el = document.getElementById('statsBody');
+  const cs = MANIFEST.collection_stats;
+  if (!cs) { el.innerHTML = '<p>No collection stats available.</p>'; return; }
+  const s = cs[statsScope];
+
+  el.innerHTML = `
+    <div class="bench-row" style="margin-bottom:18px;">
+      <button class="ghost toggle ${statsScope==='full_archive'?'active':''}" onclick="setStatsScope('full_archive')">Full archive (426 items, all described titles)</button>
+      <button class="ghost toggle ${statsScope==='available_now'?'active':''}" onclick="setStatsScope('available_now')">Split &amp; available now (${MANIFEST.confident.length} tracks)</button>
+    </div>
+    <div class="stats" style="margin:0 0 28px;">
+      <div class="stat"><span class="n">${s.total_titles_recovered.toLocaleString()}</span><span class="l">${statsScope==='full_archive' ? 'individual titles recovered across the whole archive (not all cut into tracks yet)' : 'tracks actually split and playable/downloadable so far'}</span></div>
+      <div class="stat"><span class="n">${s.total_distinct_titles.toLocaleString()}</span><span class="l">distinct song/tune titles (after normalizing spelling/articles)</span></div>
+      <div class="stat"><span class="n">${s.titles_with_repeats}</span><span class="l">titles collected more than once — real repeat performances</span></div>
+    </div>
+    ${barList('Most-collected titles', statsScope==='full_archive' ? 'Across the entire 426-item census, including titles not yet cut into individual tracks.' : 'Among the tracks already split and in the library.', s.top_titles, 15)}
+    ${barList('Most-recorded performers', statsScope==='full_archive' ? 'Who Flanders and her collectors returned to most often, archive-wide.' : 'Among the tracks already split and in the library.', s.top_performers, 15)}
+    ${barList('Most-represented towns', 'Raw location-string counts (dates not yet stripped from every entry, so some towns are split across a few near-duplicate strings).', s.top_locations, 15)}
+  `;
+}
+function setStatsScope(scope){ statsScope = scope; renderStats(); }
+
+/* tabs */
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(`view-${btn.dataset.view}`).classList.add('active');
+  });
+});
+</script>
